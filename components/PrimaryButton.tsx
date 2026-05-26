@@ -1,23 +1,40 @@
-import { Recipe } from '../types/recipe';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-export const getRecipeCategories = (recipes: Recipe[]) => {
-  return Array.from(new Set(recipes.map((recipe) => recipe.category)));
+type Props = {
+  label: string;
+  onPress: () => void;
+  danger?: boolean;
 };
 
-export const getRecipesByCategory = (recipes: Recipe[], category: string) => {
-  return recipes.filter((recipe) => recipe.category === category);
+const PrimaryButton: React.FC<Props> = ({ label, onPress, danger = false }) => {
+  return (
+    <TouchableOpacity
+      style={[styles.button, danger && styles.buttonDanger]}
+      onPress={onPress}
+    >
+      <Text style={styles.text}>{label}</Text>
+    </TouchableOpacity>
+  );
 };
 
-export const getFavoriteRecipes = (recipes: Recipe[]) => {
-  return recipes.filter((recipe) => recipe.isFavorite);
-};
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#e76f51',
+    paddingVertical: 15,
+    paddingHorizontal: 18,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  buttonDanger: {
+    backgroundColor: '#e63946',
+  },
+  text: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '800',
+  },
+});
 
-export const formatTimer = (secondsLeft: number) => {
-  const minutes = Math.floor(secondsLeft / 60);
-  const seconds = secondsLeft % 60;
-
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
-    2,
-    '0'
-  )}`;
-};
+export default PrimaryButton;

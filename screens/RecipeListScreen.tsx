@@ -1,6 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text } from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import EmptyState from '../components/EmptyState';
 import RecipeCard from '../components/RecipeCard';
 import { useRecipes } from '../data/RecipesContext';
@@ -14,6 +21,22 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.screen}>
       <Text style={styles.title}>Mis recetas</Text>
+
+      <View style={styles.actionsRow}>
+        <TouchableOpacity
+          style={styles.primaryAction}
+          onPress={() => navigation.navigate('RecipeCreate')}
+        >
+          <Text style={styles.primaryActionText}>+ Nueva receta</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.secondaryAction}
+          onPress={() => navigation.navigate('RecipeCategories')}
+        >
+          <Text style={styles.secondaryActionText}>Categorías</Text>
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={recipes}
@@ -49,6 +72,39 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 24,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  primaryAction: {
+    flex: 1,
+    backgroundColor: '#e76f51',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+  },
+  primaryActionText: {
+    color: '#ffffff',
+    fontWeight: '800',
+    fontSize: 15,
+  },
+  secondaryAction: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+  secondaryActionText: {
+    color: '#2b2d42',
+    fontWeight: '800',
+    fontSize: 15,
   },
 });
 

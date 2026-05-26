@@ -10,6 +10,7 @@ import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import RecipeFormScreen from '../screens/RecipeFormScreen';
 import RecipeListScreen from '../screens/RecipeListScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import TimerScreen from '../screens/TimerScreen';
 import { RecipeStackParamList, RootTabParamList } from './types';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -31,18 +32,26 @@ const RecipesStackScreen: React.FC = () => {
       />
 
       <RecipeStack.Screen
-        name="RecipeEdit"
-        options={{ title: 'Editar receta' }}
+        name="RecipeCreate"
+        options={{ title: 'Nueva receta' }}
       >
-        {(props) => <RecipeFormScreen {...props} mode="edit" />}
+        {(props) => <RecipeFormScreen {...props} mode="create" />}
       </RecipeStack.Screen>
+
+      <RecipeStack.Screen
+        name="RecipeCategories"
+        component={CategoriesScreen}
+        options={{ title: 'Categorías' }}
+      />
     </RecipeStack.Navigator>
   );
 };
 
+/*
 const CreateRecipeTabScreen: React.FC = () => {
   return <RecipeFormScreen mode="create" />;
 };
+*/
 
 const AppNavigator: React.FC = () => {
   return (
@@ -66,8 +75,7 @@ const AppNavigator: React.FC = () => {
 
             if (route.name === 'Inicio') iconName = 'home-outline';
             if (route.name === 'Recetas') iconName = 'restaurant-outline';
-            if (route.name === 'Nueva') iconName = 'add-circle-outline';
-            if (route.name === 'Categorias') iconName = 'grid-outline';
+            if (route.name === 'Timer') iconName = 'timer-outline';
             if (route.name === 'Ajustes') iconName = 'settings-outline';
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -76,8 +84,7 @@ const AppNavigator: React.FC = () => {
       >
         <Tab.Screen name="Inicio" component={HomeScreen} />
         <Tab.Screen name="Recetas" component={RecipesStackScreen} />
-        <Tab.Screen name="Nueva" component={CreateRecipeTabScreen} />
-        <Tab.Screen name="Categorias" component={CategoriesScreen} />
+        <Tab.Screen name="Timer" component={TimerScreen} />
         <Tab.Screen name="Ajustes" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
