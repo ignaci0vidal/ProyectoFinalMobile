@@ -10,6 +10,7 @@ import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import RecipeFormScreen from '../screens/RecipeFormScreen';
 import RecipeListScreen from '../screens/RecipeListScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import TimerScreen from '../screens/TimerScreen';
 import { RecipeStackParamList, RootTabParamList } from './types';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -74,6 +75,7 @@ const AppNavigator: React.FC = () => {
 
             if (route.name === 'Inicio') iconName = 'home-outline';
             if (route.name === 'Recetas') iconName = 'restaurant-outline';
+            if (route.name === 'Timer') iconName = 'timer-outline';
             if (route.name === 'Ajustes') iconName = 'settings-outline';
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -82,6 +84,7 @@ const AppNavigator: React.FC = () => {
       >
         <Tab.Screen name="Inicio" component={HomeScreen} />
         <Tab.Screen name="Recetas" component={RecipesStackScreen} />
+        <Tab.Screen name="Timer" component={TimerScreen} />
         <Tab.Screen name="Ajustes" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
