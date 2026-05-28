@@ -1,13 +1,11 @@
 import React from 'react';
-import { RecipesProvider } from './data/RecipesContext';
-import AppNavigator from './navigation/AppNavigator';
+import AppNavigator from './src/navigation/AppNavigator';
+import { RecipesProvider } from './src/data/RecipesContext';
 
-const App: React.FC = () => {
+export default function App() {
   return (
     <RecipesProvider>
       <AppNavigator />
     </RecipesProvider>
   );
-};
-
-export default App;
+}
