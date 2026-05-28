@@ -305,6 +305,12 @@ const styles = StyleSheet.create({
         color: '#555',
         lineHeight: 21,
     },
+    label: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#2b2d42',
+        marginBottom: 6,
+    },
 });
 
 export default TimerScreen;
