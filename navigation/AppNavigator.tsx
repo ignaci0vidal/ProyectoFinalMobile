@@ -62,13 +62,17 @@ const AppNavigator: React.FC = () => {
           tabBarActiveTintColor: '#e76f51',
           tabBarInactiveTintColor: '#777',
           tabBarLabelStyle: {
-            fontSize: 11,
-            fontWeight: '600',
+            fontSize: 14,
+            fontWeight: '700',
+            marginBottom: 2,
           },
           tabBarStyle: {
-            height: 62,
-            paddingTop: 6,
-            paddingBottom: 8,
+            height: 82,
+            paddingTop: 8,
+            paddingBottom: 18,
+            backgroundColor: '#ffffff',
+            borderTopWidth: 1,
+            borderTopColor: '#f0dfd2',
           },
           tabBarIcon: ({ color, size }) => {
             let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';

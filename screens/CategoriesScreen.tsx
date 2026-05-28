@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import EmptyState from '../components/EmptyState';
 import { useRecipes } from '../data/RecipesContext';
 import { getRecipeCategories } from '../utils/recipeHelpers';
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 
 const CategoriesScreen: React.FC = () => {
   const { recipes } = useRecipes();
@@ -10,35 +11,37 @@ const CategoriesScreen: React.FC = () => {
   const categories = getRecipeCategories(recipes);
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <Text style={styles.title}>Categorías</Text>
+    <ItalianTableclothBackground>
+      <SafeAreaView style={styles.screen}>
+        <Text style={styles.title}>Categorías</Text>
 
-      {categories.length === 0 ? (
-        <EmptyState message="Todavía no hay categorías." />
-      ) : (
-        categories.map((category) => {
-          const total = recipes.filter(
-            (recipe) => recipe.category === category
-          ).length;
+        {categories.length === 0 ? (
+          <EmptyState message="Todavía no hay categorías." />
+        ) : (
+          categories.map((category) => {
+            const total = recipes.filter(
+              (recipe) => recipe.category === category
+            ).length;
 
-          return (
-            <View key={category} style={styles.card}>
-              <Text style={styles.cardTitle}>{category}</Text>
-              <Text style={styles.cardText}>
-                {total} receta{total !== 1 ? 's' : ''}
-              </Text>
-            </View>
-          );
-        })
-      )}
-    </SafeAreaView>
+            return (
+              <View key={category} style={styles.card}>
+                <Text style={styles.cardTitle}>{category}</Text>
+                <Text style={styles.cardText}>
+                  {total} receta{total !== 1 ? 's' : ''}
+                </Text>
+              </View>
+            );
+          })
+        )}
+      </SafeAreaView>
+    </ItalianTableclothBackground>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#fff8f0',
+    backgroundColor: 'transparent',
     padding: 16,
   },
   title: {

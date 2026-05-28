@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 
 const TimerScreen: React.FC = () => {
     const [selectedMinutes, setSelectedMinutes] = useState<number>(0);
@@ -92,94 +93,96 @@ const TimerScreen: React.FC = () => {
     };
 
     return (
-        <SafeAreaView style={styles.screen}>
-            <View style={styles.content}>
-                <Text style={styles.title}>Timer de cocción</Text>
+        <ItalianTableclothBackground>
+            <SafeAreaView style={styles.screen}>
+                <View style={styles.content}>
+                    <Text style={styles.title}>Timer de cocción</Text>
 
-                <Text style={styles.description}>
-                    Seleccioná minutos y segundos para controlar tiempos de cocción dentro
-                    de miKitchen.
-                </Text>
+                    <Text style={styles.description}>
+                        Seleccioná minutos y segundos para controlar tiempos de cocción dentro
+                        de miKitchen.
+                    </Text>
 
-                <View style={styles.card}>
-                    <View style={styles.pickerRow}>
-                        <View style={styles.pickerBox}>
-                            <Text style={styles.label}>Minutos</Text>
+                    <View style={styles.card}>
+                        <View style={styles.pickerRow}>
+                            <View style={styles.pickerBox}>
+                                <Text style={styles.label}>Minutos</Text>
 
-                            <View style={styles.pickerWrapper}>
-                                <Picker
-                                    selectedValue={selectedMinutes}
-                                    onValueChange={(value) => setSelectedMinutes(Number(value))}
-                                    enabled={!isRunning}
-                                    style={styles.picker}
-                                    itemStyle={styles.pickerItem}
-                                >
-                                    {Array.from({ length: 121 }, (_, index) => (
-                                        <Picker.Item
-                                            key={index}
-                                            label={`${index} min`}
-                                            value={index}
-                                        />
-                                    ))}
-                                </Picker>
+                                <View style={styles.pickerWrapper}>
+                                    <Picker
+                                        selectedValue={selectedMinutes}
+                                        onValueChange={(value) => setSelectedMinutes(Number(value))}
+                                        enabled={!isRunning}
+                                        style={styles.picker}
+                                        itemStyle={styles.pickerItem}
+                                    >
+                                        {Array.from({ length: 121 }, (_, index) => (
+                                            <Picker.Item
+                                                key={index}
+                                                label={`${index} min`}
+                                                value={index}
+                                            />
+                                        ))}
+                                    </Picker>
+                                </View>
+                            </View>
+
+                            <View style={styles.pickerBox}>
+                                <Text style={styles.label}>Segundos</Text>
+
+                                <View style={styles.pickerWrapper}>
+                                    <Picker
+                                        selectedValue={selectedSeconds}
+                                        onValueChange={(value) => setSelectedSeconds(Number(value))}
+                                        enabled={!isRunning}
+                                        style={styles.picker}
+                                        itemStyle={styles.pickerItem}
+                                    >
+                                        {Array.from({ length: 60 }, (_, index) => (
+                                            <Picker.Item
+                                                key={index}
+                                                label={`${index} seg`}
+                                                value={index}
+                                            />
+                                        ))}
+                                    </Picker>
+                                </View>
                             </View>
                         </View>
 
-                        <View style={styles.pickerBox}>
-                            <Text style={styles.label}>Segundos</Text>
+                        <Text style={styles.timer}>{formatTime(displayedSeconds)}</Text>
 
-                            <View style={styles.pickerWrapper}>
-                                <Picker
-                                    selectedValue={selectedSeconds}
-                                    onValueChange={(value) => setSelectedSeconds(Number(value))}
-                                    enabled={!isRunning}
-                                    style={styles.picker}
-                                    itemStyle={styles.pickerItem}
-                                >
-                                    {Array.from({ length: 60 }, (_, index) => (
-                                        <Picker.Item
-                                            key={index}
-                                            label={`${index} seg`}
-                                            value={index}
-                                        />
-                                    ))}
-                                </Picker>
-                            </View>
-                        </View>
+                        {!isRunning ? (
+                            <TouchableOpacity style={styles.primaryButton} onPress={startTimer}>
+                                <Text style={styles.primaryButtonText}>Iniciar timer</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.dangerButton} onPress={stopTimer}>
+                                <Text style={styles.dangerButtonText}>Detener timer</Text>
+                            </TouchableOpacity>
+                        )}
+
+                        <TouchableOpacity style={styles.secondaryButton} onPress={resetTimer}>
+                            <Text style={styles.secondaryButtonText}>Reiniciar selección</Text>
+                        </TouchableOpacity>
                     </View>
 
-                    <Text style={styles.timer}>{formatTime(displayedSeconds)}</Text>
-
-                    {!isRunning ? (
-                        <TouchableOpacity style={styles.primaryButton} onPress={startTimer}>
-                            <Text style={styles.primaryButtonText}>Iniciar timer</Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity style={styles.dangerButton} onPress={stopTimer}>
-                            <Text style={styles.dangerButtonText}>Detener timer</Text>
-                        </TouchableOpacity>
-                    )}
-
-                    <TouchableOpacity style={styles.secondaryButton} onPress={resetTimer}>
-                        <Text style={styles.secondaryButtonText}>Reiniciar selección</Text>
-                    </TouchableOpacity>
+                    <View style={styles.infoBox}>
+                        <Text style={styles.infoTitle}>Uso en miKitchen</Text>
+                        <Text style={styles.infoText}>
+                            Este timer permite seleccionar tiempos concretos de cocción. Es ideal para controlar tiempos de horneado, hervor o cualquier proceso que requiera un tiempo específico. Recordá iniciar el timer al comenzar la cocción y detenerlo o reiniciarlo según necesites.
+                        </Text>
+                    </View>
                 </View>
-
-                <View style={styles.infoBox}>
-                    <Text style={styles.infoTitle}>Uso en miKitchen</Text>
-                    <Text style={styles.infoText}>
-                        Este timer permite seleccionar tiempos concretos de cocción. Es ideal para controlar tiempos de horneado, hervor o cualquier proceso que requiera un tiempo específico. Recordá iniciar el timer al comenzar la cocción y detenerlo o reiniciarlo según necesites.
-                    </Text>
-                </View>
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </ItalianTableclothBackground>
     );
 };
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff8f0',
+        backgroundColor: 'transparent',
     },
     content: {
         flex: 1,

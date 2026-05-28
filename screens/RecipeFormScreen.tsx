@@ -11,6 +11,9 @@ import FormInput from '../components/FormInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useRecipes } from '../data/RecipesContext';
 
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
+
+
 type Props = {
   mode?: 'create' | 'edit';
 };
@@ -71,49 +74,51 @@ const RecipeFormScreen: React.FC<Props> = ({ mode = 'create' }) => {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>
-          {mode === 'create' ? 'Nueva receta' : 'Editar receta'}
-        </Text>
+    <ItalianTableclothBackground>
+      <SafeAreaView style={styles.screen}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.title}>
+            {mode === 'create' ? 'Nueva receta' : 'Editar receta'}
+          </Text>
 
-        <Text style={styles.helperText}>
-          Ahora cargá los datos básicos de una receta. Más adelante vamos a sumar
-          ingredientes, pasos, foto y edición completa.
-        </Text>
+          <Text style={styles.helperText}>
+            Ahora cargá los datos básicos de una receta. Más adelante vamos a sumar
+            ingredientes, pasos, foto y edición completa.
+          </Text>
 
-        <FormInput
-          label="Título"
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Ej: Budín de pan"
-        />
+          <FormInput
+            label="Título"
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Ej: Budín de pan"
+          />
 
-        <FormInput
-          label="Categoría"
-          value={category}
-          onChangeText={setCategory}
-          placeholder="Ej: Postres, Pastas, Carnes"
-        />
+          <FormInput
+            label="Categoría"
+            value={category}
+            onChangeText={setCategory}
+            placeholder="Ej: Postres, Pastas, Carnes"
+          />
 
-        <FormInput
-          label="Tiempo de cocción en minutos"
-          value={cookingTime}
-          onChangeText={setCookingTime}
-          placeholder="Ej: 45"
-          keyboardType="numeric"
-        />
+          <FormInput
+            label="Tiempo de cocción en minutos"
+            value={cookingTime}
+            onChangeText={setCookingTime}
+            placeholder="Ej: 45"
+            keyboardType="numeric"
+          />
 
-        <PrimaryButton label="Guardar receta" onPress={handleSave} />
-      </ScrollView>
-    </SafeAreaView>
+          <PrimaryButton label="Guardar receta" onPress={handleSave} />
+        </ScrollView>
+      </SafeAreaView>
+    </ItalianTableclothBackground>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#fff8f0',
+    backgroundColor: 'transparent',
   },
   content: {
     width: '100%',

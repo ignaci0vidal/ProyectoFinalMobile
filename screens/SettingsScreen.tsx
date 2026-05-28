@@ -1,34 +1,37 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 
 const SettingsScreen: React.FC = () => {
   return (
-    <SafeAreaView style={styles.screen}>
-      <Text style={styles.title}>Ajustes</Text>
+    <ItalianTableclothBackground>
+      <SafeAreaView style={styles.screen}>
+        <Text style={styles.title}>Ajustes</Text>
 
-      <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>miKitchen</Text>
-        <Text style={styles.infoText}>
-          Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
-          de Aplicaciones para Dispositivos Móviles.
-        </Text>
-      </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>miKitchen</Text>
+          <Text style={styles.infoText}>
+            Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
+            de Aplicaciones para Dispositivos Móviles.
+          </Text>
+        </View>
 
-      <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Tecnologías</Text>
-        <Text style={styles.infoText}>• React Native</Text>
-        <Text style={styles.infoText}>• Expo</Text>
-        <Text style={styles.infoText}>• TypeScript</Text>
-        <Text style={styles.infoText}>• React Navigation</Text>
-      </View>
-    </SafeAreaView>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Tecnologías</Text>
+          <Text style={styles.infoText}>• React Native</Text>
+          <Text style={styles.infoText}>• Expo</Text>
+          <Text style={styles.infoText}>• TypeScript</Text>
+          <Text style={styles.infoText}>• React Navigation</Text>
+        </View>
+      </SafeAreaView>
+    </ItalianTableclothBackground>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#fff8f0',
+    backgroundColor: 'transparent',
     padding: 16,
   },
   title: {
@@ -36,6 +39,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#2b2d42',
     marginBottom: 16,
+    marginLeft: 16,
   },
   infoBox: {
     backgroundColor: '#ffffff',

@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import SummaryCard from '../components/SummaryCard';
 import { useRecipes } from '../data/RecipesContext';
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 
 const HomeScreen: React.FC = () => {
   const { recipes } = useRecipes();
@@ -11,46 +12,48 @@ const HomeScreen: React.FC = () => {
   const categories = new Set(recipes.map((recipe) => recipe.category)).size;
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.appName}>miKitchen</Text>
-          <Text style={styles.subtitle}>Mis recetas.</Text>
-        </View>
+    <ItalianTableclothBackground>
+      <SafeAreaView style={styles.screen}>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.appName}>miKitchen</Text>
+            <Text style={styles.subtitle}>Mis recetas.</Text>
+          </View>
 
-        <View style={styles.summaryContainer}>
-          <SummaryCard label="Recetas" value={totalRecipes.toString()} />
-          <SummaryCard label="Favoritas" value={favoriteRecipes.toString()} />
-          <SummaryCard label="Categorías" value={categories.toString()} />
-        </View>
+          <View style={styles.summaryContainer}>
+            <SummaryCard label="Recetas" value={totalRecipes.toString()} />
+            <SummaryCard label="Favoritas" value={favoriteRecipes.toString()} />
+            <SummaryCard label="Categorías" value={categories.toString()} />
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Objetivo de la app</Text>
-          <Text style={styles.infoText}>
-            Guardar recetas propias, organizarlas por categoría, documentarlas con
-            foto y usar un timer simple durante la cocción.
-          </Text>
-        </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Objetivo de la app</Text>
+            <Text style={styles.infoText}>
+              Guardar recetas propias, organizarlas por categoría, documentarlas con
+              foto y usar un timer simple durante la cocción.
+            </Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
-          <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
-          <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
-          <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
+            <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
+            <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
+            <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ItalianTableclothBackground>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#fff8f0',
+    backgroundColor: 'transparent',
 
   },
   header: {
-  
+
     marginBottom: 30,
   },
   appName: {

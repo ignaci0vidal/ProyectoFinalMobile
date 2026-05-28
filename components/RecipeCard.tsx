@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Recipe } from '../types/recipe';
+import TableclothCard from './TableclothCard';
 
 type Props = {
   recipe: Recipe;
@@ -10,40 +11,43 @@ type Props = {
 
 const RecipeCard: React.FC<Props> = ({ recipe, onPress }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      {recipe.imageUri ? (
-        <Image source={{ uri: recipe.imageUri }} style={styles.image} />
-      ) : (
-        <View style={styles.imagePlaceholder}>
-          <Ionicons name="restaurant-outline" size={28} color="#999" />
+    <TouchableOpacity
+      style={styles.touchable}
+      onPress={onPress}
+      activeOpacity={0.86}
+    >
+      <TableclothCard contentStyle={styles.cardContent}>
+        {recipe.imageUri ? (
+          <Image source={{ uri: recipe.imageUri }} style={styles.image} />
+        ) : (
+          <View style={styles.imagePlaceholder}>
+            <Ionicons name="restaurant-outline" size={28} color="#999" />
+          </View>
+        )}
+
+        <View style={styles.content}>
+          <Text style={styles.title}>{recipe.title}</Text>
+          <Text style={styles.category}>{recipe.category}</Text>
+          <Text style={styles.description} numberOfLines={2}>
+            {recipe.description || 'Sin descripción'}
+          </Text>
+          <Text style={styles.time}>{recipe.cookingTime} min</Text>
         </View>
-      )}
 
-      <View style={styles.content}>
-        <Text style={styles.title}>{recipe.title}</Text>
-        <Text style={styles.category}>{recipe.category}</Text>
-        <Text style={styles.description} numberOfLines={2}>
-          {recipe.description || 'Sin descripción'}
-        </Text>
-        <Text style={styles.time}>{recipe.cookingTime} min</Text>
-      </View>
-
-      {recipe.isFavorite && (
-        <Ionicons name="heart" size={22} color="#e63946" />
-      )}
+        {recipe.isFavorite && (
+          <Ionicons name="heart" size={22} color="#e63946" />
+        )}
+      </TableclothCard>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
+  touchable: {
+    width: '100%',
+  },
+  cardContent: {
     flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    borderRadius: 18,
-    padding: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#f0dfd2',
     alignItems: 'center',
   },
   image: {
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
     height: 72,
     borderRadius: 14,
     marginRight: 12,
-    backgroundColor: '#f4ece4',
+    backgroundColor: 'rgba(244, 236, 228, 0.9)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -71,13 +75,13 @@ const styles = StyleSheet.create({
   },
   category: {
     fontSize: 13,
-    color: '#e76f51',
+    color: '#b7352d',
     fontWeight: '700',
     marginTop: 2,
   },
   description: {
     fontSize: 13,
-    color: '#666',
+    color: '#555',
     marginTop: 4,
   },
   time: {
