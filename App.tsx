@@ -1,11 +1,17 @@
 import React from 'react';
-import AppNavigator from './src/navigation/AppNavigator';
+import ItalianTableclothBackground from './src/components/ItalianTableclothBackground';
+import { AuthProvider } from './src/data/AuthContext';
 import { RecipesProvider } from './src/data/RecipesContext';
+import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
   return (
-    <RecipesProvider>
-      <AppNavigator />
-    </RecipesProvider>
+    <ItalianTableclothBackground>
+      <AuthProvider>
+        <RecipesProvider>
+          <AppNavigator />
+        </RecipesProvider>
+      </AuthProvider>
+    </ItalianTableclothBackground>
   );
 }
