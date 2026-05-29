@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Alert,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,23 +12,15 @@ import { useAuth } from '../data/AuthContext';
 
 const SettingsScreen: React.FC = () => {
   const { currentUser, logout } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert(
-      'Cerrar sesión',
-      '¿Querés salir de tu cuenta?',
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Cerrar sesión',
-          style: 'destructive',
-          onPress: logout,
-        },
-      ]
-    );
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    logout();
   };
 
   return (
@@ -70,6 +62,38 @@ const SettingsScreen: React.FC = () => {
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
         </TouchableOpacity>
+
+        <Modal
+          visible={showLogoutModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowLogoutModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Cerrar sesión</Text>
+              <Text style={styles.modalText}>
+                ¿Querés salir de tu cuenta?
+              </Text>
+
+              <View style={styles.modalActions}>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => setShowLogoutModal(false)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.confirmButton}
+                  onPress={confirmLogout}
+                >
+                  <Text style={styles.confirmButtonText}>Cerrar sesión</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </ItalianTableclothBackground>
   );
@@ -124,6 +148,63 @@ const styles = StyleSheet.create({
   logoutButtonText: {
     color: '#ffffff',
     fontSize: 16,
+    fontWeight: '900',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    width: '100%',
+    backgroundColor: '#fffaf2',
+    borderRadius: 22,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#2b2d42',
+    marginBottom: 8,
+  },
+  modalText: {
+    fontSize: 15,
+    color: '#555',
+    lineHeight: 22,
+    marginBottom: 18,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#e76f51',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
+  cancelButtonText: {
+    color: '#e76f51',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  confirmButton: {
+    flex: 1,
+    backgroundColor: '#e76f51',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    color: '#ffffff',
+    fontSize: 15,
     fontWeight: '900',
   },
 });
