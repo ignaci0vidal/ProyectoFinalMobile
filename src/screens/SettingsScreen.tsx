@@ -1,12 +1,15 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   Modal,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useAuth } from '../data/AuthContext';
 
@@ -26,42 +29,81 @@ const SettingsScreen: React.FC = () => {
   return (
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
-        <Text style={styles.title}>Ajustes</Text>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Ajustes</Text>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Usuario actual</Text>
+          <View style={styles.infoBox}>
+            <View style={styles.infoHeader}>
+              <Ionicons name="person-circle-outline" size={24} color="#e76f51" />
+              <Text style={styles.infoTitle}>Usuario actual</Text>
+            </View>
 
-          <Text style={styles.label}>Nombre</Text>
-          <Text style={styles.infoText}>{currentUser?.name}</Text>
+            <Text style={styles.label}>Nombre</Text>
+            <Text style={styles.infoText}>
+              {currentUser?.name ?? 'Sin nombre cargado'}
+            </Text>
 
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.infoText}>{currentUser?.email}</Text>
+            <Text style={styles.label}>Email</Text>
+            <Text style={styles.infoText}>
+              {currentUser?.email ?? 'Sin email cargado'}
+            </Text>
 
-          <Text style={styles.label}>Rol</Text>
-          <Text style={styles.infoText}>
-            {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
-          </Text>
-        </View>
+            <Text style={styles.label}>Rol</Text>
+            <Text style={styles.infoText}>
+              {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
+            </Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>miKitchen</Text>
-          <Text style={styles.infoText}>
-            Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
-            de Aplicaciones para Dispositivos Móviles.
-          </Text>
-        </View>
+          <View style={styles.infoBox}>
+            <View style={styles.infoHeader}>
+              <Ionicons name="restaurant-outline" size={22} color="#e76f51" />
+              <Text style={styles.infoTitle}>miKitchen</Text>
+            </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Tecnologías</Text>
-          <Text style={styles.infoText}>• React Native</Text>
-          <Text style={styles.infoText}>• Expo</Text>
-          <Text style={styles.infoText}>• TypeScript</Text>
-          <Text style={styles.infoText}>• React Navigation</Text>
-        </View>
+            <Text style={styles.infoText}>
+              Aplicación desarrollada como Trabajo Práctico Integrador de
+              Desarrollo de Aplicaciones para Dispositivos Móviles.
+            </Text>
+          </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
-        </TouchableOpacity>
+          <View style={styles.infoBox}>
+            <View style={styles.infoHeader}>
+              <Ionicons name="code-slash-outline" size={22} color="#e76f51" />
+              <Text style={styles.infoTitle}>Tecnologías</Text>
+            </View>
+
+            <Text style={styles.infoText}>• React Native</Text>
+            <Text style={styles.infoText}>• Expo</Text>
+            <Text style={styles.infoText}>• TypeScript</Text>
+            <Text style={styles.infoText}>• React Navigation</Text>
+            <Text style={styles.infoText}>• Context API</Text>
+          </View>
+
+          <View style={styles.infoBox}>
+            <View style={styles.infoHeader}>
+              <Ionicons name="information-circle-outline" size={22} color="#e76f51" />
+              <Text style={styles.infoTitle}>Alcance del proyecto</Text>
+            </View>
+
+            <Text style={styles.infoText}>
+              Las recetas se administran en memoria usando estado global con
+              Context API. Esto permite crear, editar, eliminar y marcar recetas
+              como favoritas durante la sesión de uso.
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={handleLogout}
+            activeOpacity={0.85}
+          >
+            <Ionicons name="log-out-outline" size={20} color="#ffffff" />
+            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </ScrollView>
 
         <Modal
           visible={showLogoutModal}
@@ -71,15 +113,22 @@ const SettingsScreen: React.FC = () => {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalCard}>
+              <View style={styles.modalIcon}>
+                <Ionicons name="log-out-outline" size={30} color="#e76f51" />
+              </View>
+
               <Text style={styles.modalTitle}>Cerrar sesión</Text>
+
               <Text style={styles.modalText}>
-                ¿Querés salir de tu cuenta?
+                ¿Querés salir de tu cuenta? Vas a volver a la pantalla de inicio
+                de sesión.
               </Text>
 
               <View style={styles.modalActions}>
                 <TouchableOpacity
                   style={styles.cancelButton}
                   onPress={() => setShowLogoutModal(false)}
+                  activeOpacity={0.85}
                 >
                   <Text style={styles.cancelButtonText}>Cancelar</Text>
                 </TouchableOpacity>
@@ -87,6 +136,7 @@ const SettingsScreen: React.FC = () => {
                 <TouchableOpacity
                   style={styles.confirmButton}
                   onPress={confirmLogout}
+                  activeOpacity={0.85}
                 >
                   <Text style={styles.confirmButtonText}>Cerrar sesión</Text>
                 </TouchableOpacity>
@@ -103,28 +153,39 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'transparent',
-    padding: 16,
+  },
+  content: {
+    width: '100%',
+    maxWidth: 920,
+    alignSelf: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 32,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 26,
     fontWeight: '800',
     color: '#2b2d42',
     marginBottom: 16,
-    marginLeft: 16,
   },
   infoBox: {
     backgroundColor: 'rgba(255, 250, 242, 0.94)',
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 18,
     marginBottom: 14,
     borderWidth: 1,
     borderColor: '#f0dfd2',
+  },
+  infoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 10,
   },
   infoTitle: {
     fontSize: 17,
     fontWeight: '800',
     color: '#2b2d42',
-    marginBottom: 10,
   },
   label: {
     fontSize: 13,
@@ -143,7 +204,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 16,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 4,
+    flexDirection: 'row',
+    gap: 8,
   },
   logoutButtonText: {
     color: '#ffffff',
@@ -152,16 +216,28 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+    backgroundColor: 'rgba(0, 0, 0, 0.38)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
   },
   modalCard: {
     width: '100%',
+    maxWidth: 420,
     backgroundColor: '#fffaf2',
     borderRadius: 22,
     padding: 20,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+  modalIcon: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: '#fff3ed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: '#f0dfd2',
   },

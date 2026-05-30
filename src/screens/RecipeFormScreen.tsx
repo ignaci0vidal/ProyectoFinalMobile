@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -8,43 +9,101 @@ import {
 } from 'react-native';
 
 import FormInput from '../components/FormInput';
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import PrimaryButton from '../components/PrimaryButton';
 import { useRecipes } from '../data/RecipesContext';
+import { RecipeStackParamList } from '../navigation/types';
 
-import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
+type CreateProps = NativeStackScreenProps<RecipeStackParamList, 'RecipeCreate'>;
+type EditProps = NativeStackScreenProps<RecipeStackParamList, 'RecipeEdit'>;
 
-
-type Props = {
+type Props = (CreateProps | EditProps) & {
   mode?: 'create' | 'edit';
 };
 
-const RecipeFormScreen: React.FC<Props> = ({ mode = 'create' }) => {
-  const { addRecipe } = useRecipes();
+const RecipeFormScreen: React.FC<Props> = ({
+  mode = 'create',
+  route,
+  navigation,
+}) => {
+  const { recipes, addRecipe, updateRecipe } = useRecipes();
+
+  const recipeId = mode === 'edit' ? route.params?.recipeId : undefined;
+
+  const recipeToEdit = useMemo(() => {
+    if (!recipeId) return undefined;
+
+    return recipes.find((recipe) => recipe.id === recipeId);
+  }, [recipeId, recipes]);
 
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
+  const [ingredients, setIngredients] = useState('');
+  const [steps, setSteps] = useState('');
   const [cookingTime, setCookingTime] = useState('');
+
+  useEffect(() => {
+    if (mode !== 'edit' || !recipeToEdit) return;
+
+    setTitle(recipeToEdit.title);
+    setCategory(recipeToEdit.category);
+    setDescription(recipeToEdit.description);
+    setIngredients(recipeToEdit.ingredients);
+    setSteps(recipeToEdit.steps);
+    setCookingTime(String(recipeToEdit.cookingTime));
+  }, [mode, recipeToEdit]);
 
   const clearForm = () => {
     setTitle('');
     setCategory('');
+    setDescription('');
+    setIngredients('');
+    setSteps('');
     setCookingTime('');
   };
 
-  // Validación simple para los campos básicos.
   const validateForm = () => {
     if (!title.trim()) {
       return 'El título es obligatorio.';
+    }
+
+    if (title.trim().length < 3) {
+      return 'El título debe tener al menos 3 caracteres.';
     }
 
     if (!category.trim()) {
       return 'La categoría es obligatoria.';
     }
 
+    if (!description.trim()) {
+      return 'La descripción es obligatoria.';
+    }
+
+    if (!ingredients.trim()) {
+      return 'Los ingredientes son obligatorios.';
+    }
+
+    if (!steps.trim()) {
+      return 'Los pasos de preparación son obligatorios.';
+    }
+
+    if (!cookingTime.trim()) {
+      return 'El tiempo de cocción es obligatorio.';
+    }
+
     const parsedCookingTime = Number(cookingTime);
 
-    if (Number.isNaN(parsedCookingTime) || parsedCookingTime <= 0) {
-      return 'El tiempo de cocción debe ser un número mayor a 0 para poder usar el timer.';
+    if (
+      Number.isNaN(parsedCookingTime) ||
+      !Number.isFinite(parsedCookingTime) ||
+      parsedCookingTime <= 0
+    ) {
+      return 'El tiempo de cocción debe ser un número mayor a 0.';
+    }
+
+    if (!Number.isInteger(parsedCookingTime)) {
+      return 'El tiempo de cocción debe ser un número entero. Por ejemplo: 45.';
     }
 
     return null;
@@ -58,32 +117,77 @@ const RecipeFormScreen: React.FC<Props> = ({ mode = 'create' }) => {
       return;
     }
 
-    await addRecipe({
+    const recipeData = {
       title: title.trim(),
       category: category.trim(),
-      description: 'Sin descripción cargada.',
-      ingredients: 'Ingredientes pendientes de cargar.',
-      steps: 'Pasos pendientes de cargar.',
+      description: description.trim(),
+      ingredients: ingredients.trim(),
+      steps: steps.trim(),
       cookingTime: Number(cookingTime),
-      imageUri: undefined,
-      isFavorite: false,
-    });
+      imageUri: recipeToEdit?.imageUri,
+      isFavorite: recipeToEdit?.isFavorite ?? false,
+    };
 
-    Alert.alert('Receta guardada', 'La receta fue agregada a tu recetario correctamente.');
+    if (mode === 'edit') {
+      if (!recipeId || !recipeToEdit) {
+        Alert.alert(
+          'No se pudo editar',
+          'No encontramos la receta seleccionada.'
+        );
+        return;
+      }
+
+      await updateRecipe(recipeId, recipeData);
+
+      Alert.alert(
+        'Receta actualizada',
+        'Los cambios fueron guardados correctamente.'
+      );
+
+      navigation.goBack();
+      return;
+    }
+
+    await addRecipe(recipeData);
+
+    Alert.alert(
+      'Receta guardada',
+      'La receta fue agregada a tu recetario correctamente.'
+    );
+
     clearForm();
   };
+
+  if (mode === 'edit' && recipeId && !recipeToEdit) {
+    return (
+      <ItalianTableclothBackground>
+        <SafeAreaView style={styles.screen}>
+          <ScrollView contentContainerStyle={styles.content}>
+            <Text style={styles.title}>Receta no encontrada</Text>
+            <Text style={styles.helperText}>
+              No pudimos encontrar la receta que intentás editar.
+            </Text>
+          </ScrollView>
+        </SafeAreaView>
+      </ItalianTableclothBackground>
+    );
+  }
 
   return (
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
-        <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+        >
           <Text style={styles.title}>
             {mode === 'create' ? 'Nueva receta' : 'Editar receta'}
           </Text>
 
           <Text style={styles.helperText}>
-            Ahora cargá los datos básicos de una receta. Más adelante vamos a sumar
-            ingredientes, pasos, foto y edición completa.
+            {mode === 'create'
+              ? 'Cargá los datos principales de la receta. Estos datos se van a usar para mostrarla en el listado, verla en detalle y utilizar el timer de cocción.'
+              : 'Modificá los datos necesarios y guardá los cambios para actualizar la receta.'}
           </Text>
 
           <FormInput
@@ -101,6 +205,30 @@ const RecipeFormScreen: React.FC<Props> = ({ mode = 'create' }) => {
           />
 
           <FormInput
+            label="Descripción"
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Ej: Receta casera, simple y económica"
+            multiline
+          />
+
+          <FormInput
+            label="Ingredientes"
+            value={ingredients}
+            onChangeText={setIngredients}
+            placeholder="Ej: Pan, leche, huevos, azúcar"
+            multiline
+          />
+
+          <FormInput
+            label="Pasos de preparación"
+            value={steps}
+            onChangeText={setSteps}
+            placeholder="Ej: Mezclar, hornear y dejar enfriar"
+            multiline
+          />
+
+          <FormInput
             label="Tiempo de cocción en minutos"
             value={cookingTime}
             onChangeText={setCookingTime}
@@ -108,7 +236,10 @@ const RecipeFormScreen: React.FC<Props> = ({ mode = 'create' }) => {
             keyboardType="numeric"
           />
 
-          <PrimaryButton label="Guardar receta" onPress={handleSave} />
+          <PrimaryButton
+            label={mode === 'create' ? 'Guardar receta' : 'Guardar cambios'}
+            onPress={handleSave}
+          />
         </ScrollView>
       </SafeAreaView>
     </ItalianTableclothBackground>

@@ -42,6 +42,13 @@ const RecipesStackScreen: React.FC = () => {
       </RecipeStack.Screen>
 
       <RecipeStack.Screen
+        name="RecipeEdit"
+        options={{ title: 'Editar receta' }}
+      >
+        {(props) => <RecipeFormScreen {...props} mode="edit" />}
+      </RecipeStack.Screen>
+
+      <RecipeStack.Screen
         name="RecipeCategories"
         component={CategoriesScreen}
         options={{ title: 'Categorías' }}

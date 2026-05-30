@@ -1,6 +1,6 @@
 export type Recipe = {
   id: string;
-  userId: string;
+  userId: string; // cada receta está asociada a un usuario
   title: string;
   category: string;
   description: string;

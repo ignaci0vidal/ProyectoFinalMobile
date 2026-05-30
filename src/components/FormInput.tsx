@@ -33,8 +33,13 @@ const FormInput: React.FC<Props> = ({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
+        placeholderTextColor="#9a8f8a"
         multiline={multiline}
+        numberOfLines={multiline ? 4 : 1}
         keyboardType={keyboardType}
+        autoCorrect={false}
+        autoCapitalize="sentences"
+        textAlignVertical={multiline ? 'top' : 'center'}
       />
     </View>
   );
@@ -55,12 +60,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f0dfd2',
     borderRadius: 14,
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
     fontSize: 15,
+    color: '#2b2d42',
   },
   inputMultiline: {
-    minHeight: 100,
-    textAlignVertical: 'top',
+    minHeight: 110,
   },
 });
 
