@@ -230,11 +230,21 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                 <Ionicons name="close" size={26} color="#ffffff" />
               </TouchableOpacity>
 
-              <Image
-                source={{ uri: recipe.imageUri }}
-                style={styles.fullImage}
-                resizeMode="contain"
-              />
+              <TouchableOpacity
+                style={styles.fullImageTouchable}
+                onPress={() => setShowImageModal(false)}
+                activeOpacity={1}
+              >
+                <Image
+                  source={{ uri: recipe.imageUri }}
+                  style={styles.fullImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+
+              <Text style={styles.closeImageHint}>
+                Tocá la imagen para cerrar
+              </Text>
             </View>
           </Modal>
         )}
@@ -416,7 +426,7 @@ const styles = StyleSheet.create({
   },
   fullImage: {
     width: '100%',
-    height: '82%',
+    height: '100%',
   },
   closeImageButton: {
     position: 'absolute',
@@ -429,6 +439,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  fullImageTouchable: {
+    width: '100%',
+    height: '82%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeImageHint: {
+    position: 'absolute',
+    bottom: 42,
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+    opacity: 0.85,
   },
 });
 
