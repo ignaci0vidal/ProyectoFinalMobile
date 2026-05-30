@@ -1,10 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useMemo } from 'react';
+import * as Haptics from 'expo-haptics';
+import React, { useMemo, useState } from 'react';
 import {
   Alert,
+  Image,
+  Modal,
   SafeAreaView,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,6 +26,8 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { recipeId } = route.params;
   const { recipes, deleteRecipe, toggleFavorite } = useRecipes();
 
+  const [showImageModal, setShowImageModal] = useState(false);
+
   const recipe = useMemo(() => {
     return recipes.find((item) => item.id === recipeId);
   }, [recipes, recipeId]);
@@ -32,6 +38,41 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const handleToggleFavorite = async () => {
     await toggleFavorite(recipeId);
+  };
+
+  const handleShare = async () => {
+    if (!recipe) return;
+
+    const message = [
+      `🍽️ ${recipe.title}`,
+      '',
+      `Categoría: ${recipe.category}`,
+      `Tiempo de cocción: ${recipe.cookingTime} minutos`,
+      '',
+      'Ingredientes:',
+      recipe.ingredients,
+      '',
+      'Pasos:',
+      recipe.steps,
+      '',
+      'Compartido desde miKitchen.',
+    ].join('\n');
+
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+      await Share.share({
+        title: recipe.title,
+        message,
+      });
+    } catch {
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+
+      Alert.alert(
+        'No se pudo compartir',
+        'Ocurrió un problema al intentar compartir la receta.'
+      );
+    }
   };
 
   const handleDelete = () => {
@@ -61,6 +102,7 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         <SafeAreaView style={styles.screen}>
           <View style={styles.emptyContainer}>
             <Text style={styles.title}>Receta no encontrada</Text>
+
             <Text style={styles.helperText}>
               No pudimos encontrar la receta seleccionada.
             </Text>
@@ -79,6 +121,26 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
         <ScrollView contentContainerStyle={styles.content}>
+          {recipe.imageUri ? (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => setShowImageModal(true)}
+            >
+              <Image
+                source={{ uri: recipe.imageUri }}
+                style={styles.heroImage}
+                resizeMode="contain"
+              />
+
+              <Text style={styles.imageHint}>Tocar para ver imagen completa</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.heroPlaceholder}>
+              <Ionicons name="restaurant-outline" size={44} color="#b7352d" />
+              <Text style={styles.heroPlaceholderText}>Sin foto cargada</Text>
+            </View>
+          )}
+
           <View style={styles.header}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>{recipe.title}</Text>
@@ -133,6 +195,15 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
             <PrimaryButton label="Editar receta" onPress={handleEdit} />
 
             <TouchableOpacity
+              style={styles.shareButton}
+              onPress={handleShare}
+              activeOpacity={0.85}
+            >
+              <Ionicons name="share-social-outline" size={20} color="#ffffff" />
+              <Text style={styles.shareButtonText}>Compartir receta</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
               style={styles.deleteButton}
               onPress={handleDelete}
               activeOpacity={0.8}
@@ -142,6 +213,33 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         </ScrollView>
+
+        {recipe.imageUri && (
+          <Modal
+            visible={showImageModal}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setShowImageModal(false)}
+          >
+            <View style={styles.imageModalOverlay}>
+              <TouchableOpacity
+                style={styles.closeImageButton}
+                onPress={() => setShowImageModal(false)}
+                activeOpacity={0.85}
+              >
+                <Ionicons name="close" size={26} color="#ffffff" />
+              </TouchableOpacity>
+
+              <Image
+                source={{ uri: recipe.imageUri }}
+                style={styles.fullImage}
+                resizeMode="contain"
+              />
+            </View>
+          </Modal>
+        )}
+
+
       </SafeAreaView>
     </ItalianTableclothBackground>
   );
@@ -167,6 +265,30 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     paddingHorizontal: 32,
+  },
+  heroImage: {
+    width: '100%',
+    height: 300,
+    borderRadius: 22,
+    backgroundColor: '#f4ece4',
+    marginBottom: 14,
+  },
+  heroPlaceholder: {
+    width: '100%',
+    height: 190,
+    borderRadius: 22,
+    backgroundColor: '#fff3ed',
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    gap: 8,
+  },
+  heroPlaceholderText: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#b7352d',
   },
   header: {
     flexDirection: 'row',
@@ -247,6 +369,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
     gap: 12,
   },
+  shareButton: {
+    backgroundColor: '#2a9d8f',
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  shareButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '800',
+  },
   deleteButton: {
     backgroundColor: '#d62828',
     paddingVertical: 14,
@@ -261,6 +398,37 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '800',
+  },
+  imageHint: {
+    textAlign: 'center',
+    fontSize: 13,
+    color: '#777',
+    fontWeight: '700',
+    marginTop: -10,
+    marginBottom: 16,
+  },
+  imageModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.92)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  fullImage: {
+    width: '100%',
+    height: '82%',
+  },
+  closeImageButton: {
+    position: 'absolute',
+    top: 48,
+    right: 24,
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
