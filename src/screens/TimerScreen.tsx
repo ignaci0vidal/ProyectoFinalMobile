@@ -11,11 +11,18 @@ import {
 } from 'react-native';
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 
+import { useAudioPlayer } from 'expo-audio';
+
+
+const timerFinishedSound = require('../assets/sounds/timer-finished.mp3');
+
 const TimerScreen: React.FC = () => {
     const [selectedMinutes, setSelectedMinutes] = useState<number>(0);
     const [selectedSeconds, setSelectedSeconds] = useState<number>(10);
     const [secondsLeft, setSecondsLeft] = useState<number>(0);
     const [isRunning, setIsRunning] = useState<boolean>(false);
+
+    const player = useAudioPlayer(timerFinishedSound);
 
     const hasFinishedRef = useRef(false);
 
@@ -38,13 +45,18 @@ const TimerScreen: React.FC = () => {
         if (secondsLeft !== 0 || isRunning || !hasFinishedRef.current) return;
 
         const notifyEnd = async () => {
+            player.seekTo(0);
+            player.play();
+
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
             Alert.alert('Timer finalizado', 'La cocción terminó.');
+
             hasFinishedRef.current = false;
         };
 
         notifyEnd();
-    }, [secondsLeft, isRunning]);
+    }, [secondsLeft, isRunning, player]);
 
     const formatTime = (totalSeconds: number) => {
         const minutes = Math.floor(totalSeconds / 60);
