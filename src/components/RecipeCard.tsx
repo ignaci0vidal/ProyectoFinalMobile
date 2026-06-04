@@ -17,8 +17,11 @@ const RecipeCard: React.FC<Props> = ({ recipe, onPress }) => {
       activeOpacity={0.86}
     >
       <TableclothCard contentStyle={styles.cardContent}>
-        {recipe.imageUri ? (
-          <Image source={{ uri: recipe.imageUri }} style={styles.image} />
+        {recipe.imageUri || recipe.imageSource ? (
+          <Image
+            source={recipe.imageUri ? { uri: recipe.imageUri } : recipe.imageSource}
+            style={styles.image}
+          />
         ) : (
           <View style={styles.imagePlaceholder}>
             <Ionicons name="restaurant-outline" size={28} color="#999" />

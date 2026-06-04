@@ -61,10 +61,10 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
         <ScrollView contentContainerStyle={styles.content}>
-          {recipe.imageUri && (
+          {(recipe.imageUri || recipe.imageSource) && (
             <Pressable onPress={() => setIsImageModalVisible(true)}>
               <Image
-                source={{ uri: recipe.imageUri }}
+                source={recipe.imageUri ? { uri: recipe.imageUri } : recipe.imageSource}
                 style={styles.recipeImage}
               />
             </Pressable>
@@ -138,7 +138,7 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
           </View>
         </ScrollView>
 
-        {recipe.imageUri && (
+        {(recipe.imageUri || recipe.imageSource) && (
           <Modal
             visible={isImageModalVisible}
             transparent
@@ -150,7 +150,7 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
               onPress={() => setIsImageModalVisible(false)}
             >
               <Image
-                source={{ uri: recipe.imageUri }}
+                source={recipe.imageUri ? { uri: recipe.imageUri } : recipe.imageSource}
                 style={styles.fullscreenImage}
                 resizeMode="contain"
               />

@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from 'react-native';
+
 export type Recipe = {
   id: string;
   userId: string;
@@ -8,6 +10,7 @@ export type Recipe = {
   steps: string;
   cookingTime: number;
   imageUri?: string;
+  imageSource?: ImageSourcePropType;
   isFavorite: boolean;
   createdAt: string;
 };
