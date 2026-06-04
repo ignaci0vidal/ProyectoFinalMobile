@@ -8,16 +8,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import EmptyState from '../components/EmptyState';
+import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import RecipeCard from '../components/RecipeCard';
 import { useRecipes } from '../data/RecipesContext';
 import { RecipeStackParamList } from '../navigation/types';
-import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 
 type Props = NativeStackScreenProps<RecipeStackParamList, 'RecipeList'>;
 
 const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
   const { recipes } = useRecipes();
+
+  const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite).length;
 
   return (
     <ItalianTableclothBackground>
@@ -25,12 +28,21 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
         <View style={styles.headerContent}>
           <Text style={styles.title}>Mis recetas</Text>
 
+          <TouchableOpacity
+            style={styles.primaryAction}
+            onPress={() => navigation.navigate('RecipeCreate')}
+          >
+            <Text style={styles.primaryActionText}>+ Nueva receta</Text>
+          </TouchableOpacity>
+
           <View style={styles.actionsRow}>
             <TouchableOpacity
-              style={styles.primaryAction}
-              onPress={() => navigation.navigate('RecipeCreate')}
+              style={styles.secondaryAction}
+              onPress={() => navigation.navigate('FavoriteRecipes')}
             >
-              <Text style={styles.primaryActionText}>+ Nueva receta</Text>
+              <Text style={styles.secondaryActionText}>
+                Favoritas ({favoriteRecipes})
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -66,19 +78,18 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#fff8f0',
+    backgroundColor: 'transparent',
     paddingTop: 16,
   },
   headerContent: {
-    // Contenedor del título y los botones.
-    // Por ahora no mueve todo porque solo querías correr "Mis recetas".
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   title: {
     fontSize: 26,
     fontWeight: '800',
     color: '#2b2d42',
     marginBottom: 16,
-    marginLeft: 16,
   },
   listContent: {
     paddingBottom: 24,
@@ -86,10 +97,9 @@ const styles = StyleSheet.create({
   actionsRow: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 16,
+    marginTop: 12,
   },
   primaryAction: {
-    flex: 1,
     backgroundColor: '#e76f51',
     paddingVertical: 14,
     paddingHorizontal: 16,
