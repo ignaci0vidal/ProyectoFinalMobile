@@ -11,4 +11,5 @@ export type RecipeStackParamList = {
   RecipeEdit: { recipeId: string };
   RecipeCreate: undefined;
   RecipeCategories: undefined;
+  FavoriteRecipes: undefined;
 };

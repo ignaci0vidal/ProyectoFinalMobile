@@ -16,6 +16,8 @@ import SignupScreen from '../screens/SignupScreen';
 import TimerScreen from '../screens/TimerScreen';
 import { RecipeStackParamList, RootTabParamList } from './types';
 
+import FavoriteRecipesScreen from '../screens/FavoriteRecipesScreen';
+
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const RecipeStack = createNativeStackNavigator<RecipeStackParamList>();
 
@@ -26,6 +28,12 @@ const RecipesStackScreen: React.FC = () => {
         name="RecipeList"
         component={RecipeListScreen}
         options={{ title: 'Recetas' }}
+      />
+
+      <RecipeStack.Screen
+        name="FavoriteRecipes"
+        component={FavoriteRecipesScreen}
+        options={{ title: 'Favoritas' }}
       />
 
       <RecipeStack.Screen

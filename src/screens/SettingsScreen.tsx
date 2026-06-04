@@ -44,11 +44,26 @@ const SettingsScreen: React.FC = () => {
         </View>
 
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>miKitchen</Text>
+          <Text style={styles.infoTitle}>Acerca de miKitchen</Text>
           <Text style={styles.infoText}>
             Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
             de Aplicaciones para Dispositivos Móviles.
           </Text>
+        </View>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Objetivo de la app</Text>
+          <Text style={styles.infoText}>
+            Guardar recetas propias, organizarlas por categoría, documentarlas con
+            foto y usar un timer simple durante la cocción.
+          </Text>
+        </View>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
+          <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
+          <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
+          <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
         </View>
 
         <View style={styles.infoBox}>
@@ -57,6 +72,7 @@ const SettingsScreen: React.FC = () => {
           <Text style={styles.infoText}>• Expo</Text>
           <Text style={styles.infoText}>• TypeScript</Text>
           <Text style={styles.infoText}>• React Navigation</Text>
+          <Text style={styles.infoText}>• Context API para usuarios y recetas</Text>
         </View>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

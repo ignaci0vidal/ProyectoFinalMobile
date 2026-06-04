@@ -1,15 +1,35 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import SummaryCard from '../components/SummaryCard';
-import { useRecipes } from '../data/RecipesContext';
+import {
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
+import { useRecipes } from '../data/RecipesContext';
 
 const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
   const { recipes } = useRecipes();
 
   const totalRecipes = recipes.length;
-  const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite).length;
-  const categories = new Set(recipes.map((recipe) => recipe.category)).size;
+
+  const goToRecipes = () => {
+    navigation.navigate('Recetas');
+  };
+
+  const goToCreateRecipe = () => {
+    navigation.navigate('Recetas', {
+      screen: 'RecipeCreate',
+    });
+  };
+
+  const goToTimer = () => {
+    navigation.navigate('Timer');
+  };
 
   return (
     <ItalianTableclothBackground>
@@ -17,28 +37,55 @@ const HomeScreen: React.FC = () => {
         <View style={styles.content}>
           <View style={styles.header}>
             <Text style={styles.appName}>miKitchen</Text>
-            <Text style={styles.subtitle}>Mis recetas.</Text>
+            <Text style={styles.subtitle}>Tus recetas organizadas.</Text>
           </View>
 
-          <View style={styles.summaryContainer}>
-            <SummaryCard label="Recetas" value={totalRecipes.toString()} />
-            <SummaryCard label="Favoritas" value={favoriteRecipes.toString()} />
-            <SummaryCard label="Categorías" value={categories.toString()} />
+          <View style={styles.mainActionsContainer}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.mainButton,
+                styles.recipesButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={goToRecipes}
+            >
+              <Text style={styles.recipesButtonNumber}>{totalRecipes}</Text>
+              <Text style={styles.recipesButtonLabel}>Recetas</Text>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.mainButton,
+                styles.createRecipeButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={goToCreateRecipe}
+            >
+              <Text style={styles.createRecipePlus}>+</Text>
+              <Text style={styles.createRecipeLabel}>Nueva receta</Text>
+            </Pressable>
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Objetivo de la app</Text>
+            <Text style={styles.infoTitle}>Acción rápida</Text>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.timerButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={goToTimer}
+            >
+              <Text style={styles.timerButtonText}>Abrir timer de cocción</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Resumen</Text>
             <Text style={styles.infoText}>
-              Guardar recetas propias, organizarlas por categoría, documentarlas con
-              foto y usar un timer simple durante la cocción.
+              Tenés {totalRecipes} recetas cargadas. Desde esta pantalla podés
+              consultar tu recetario, crear una receta nueva o abrir el timer.
             </Text>
-          </View>
-
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
-            <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
-            <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
-            <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -50,10 +97,17 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'transparent',
-
+  },
+  content: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 920,
+    alignSelf: 'center',
+    paddingHorizontal: 32,
+    paddingTop: 32,
+    paddingBottom: 24,
   },
   header: {
-
     marginBottom: 30,
   },
   appName: {
@@ -68,10 +122,75 @@ const styles = StyleSheet.create({
     color: '#555',
     fontWeight: '600',
   },
-  summaryContainer: {
+  mainActionsContainer: {
     flexDirection: 'row',
+    gap: 12,
     marginBottom: 22,
-    gap: 4,
+  },
+  mainButton: {
+    flex: 1,
+    minHeight: 104,
+    borderRadius: 16,
+    padding: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 6,
+
+    elevation: 6,
+  },
+  recipesButton: {
+    backgroundColor: '#ffffff',
+    borderColor: '#f0dfd2',
+    borderBottomWidth: 5,
+    borderBottomColor: '#d8c8bb',
+  },
+  createRecipeButton: {
+    backgroundColor: '#e76f51',
+    borderColor: '#c94f34',
+    borderBottomWidth: 5,
+    borderBottomColor: '#c94f34',
+  },
+  buttonPressed: {
+    transform: [{ translateY: 3 }],
+    borderBottomWidth: 2,
+    shadowOpacity: 0.12,
+    elevation: 2,
+  },
+  recipesButtonNumber: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#e76f51',
+    lineHeight: 36,
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  recipesButtonLabel: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#2b2d42',
+    textAlign: 'center',
+  },
+  createRecipePlus: {
+    fontSize: 34,
+    fontWeight: '900',
+    color: '#ffffff',
+    lineHeight: 38,
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  createRecipeLabel: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#ffffff',
+    textAlign: 'center',
   },
   infoBox: {
     backgroundColor: '#ffffff',
@@ -85,21 +204,38 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     color: '#2b2d42',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   infoText: {
     fontSize: 15,
     color: '#555',
     lineHeight: 21,
   },
-  content: {
-    flex: 1,
-    width: '100%',
-    maxWidth: 920,
-    alignSelf: 'center',
-    paddingHorizontal: 32,
-    paddingTop: 32,
-    paddingBottom: 24,
+  timerButton: {
+    backgroundColor: '#e76f51',
+    paddingVertical: 15,
+    borderRadius: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#c94f34',
+    borderBottomWidth: 5,
+    borderBottomColor: '#c94f34',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+
+    elevation: 6,
+  },
+  timerButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '900',
+    textAlign: 'center',
   },
 });
 
