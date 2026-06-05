@@ -67,7 +67,7 @@ const HomeScreen: React.FC = () => {
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Acción rápida</Text>
+            <Text style={styles.infoTitle}></Text>
 
             <Pressable
               style={({ pressed }) => [

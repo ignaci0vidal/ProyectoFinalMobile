@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
+  //Alert,
   Image,
   Modal,
   Pressable,
@@ -26,9 +27,10 @@ const parseIngredientLine = (line: string) => {
   };
 };
 
-const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
-  const { recipes, toggleFavorite } = useRecipes();
+const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
+  const { recipes, toggleFavorite, deleteRecipe } = useRecipes();
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const { recipeId } = route.params;
 
@@ -56,6 +58,17 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
   const handleToggleFavorite = async () => {
     await toggleFavorite(recipe.id);
   };
+
+  const handleDeleteRecipe = () => {
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDeleteRecipe = async () => {
+    await deleteRecipe(recipe.id);
+    setIsDeleteModalVisible(false);
+    navigation.navigate('RecipeList');
+  };
+
 
   return (
     <ItalianTableclothBackground>
@@ -105,6 +118,20 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
                     ? 'Quitar de favoritas'
                     : 'Agregar a favoritas'}
                 </Text>
+              </Pressable>
+
+              <Pressable
+                style={styles.editButton}
+                onPress={() => navigation.navigate('RecipeEdit', { recipeId })}
+              >
+                <Text style={styles.editButtonText}>Editar receta</Text>
+              </Pressable>
+
+              <Pressable
+                style={styles.deleteButton}
+                onPress={handleDeleteRecipe}
+              >
+                <Text style={styles.deleteButtonText}>Eliminar receta</Text>
               </Pressable>
             </View>
           </View>
@@ -161,6 +188,39 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
             </Pressable>
           </Modal>
         )}
+
+        <Modal
+          visible={isDeleteModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setIsDeleteModalVisible(false)}
+        >
+          <View style={styles.deleteModalOverlay}>
+            <View style={styles.deleteModalCard}>
+              <Text style={styles.deleteModalTitle}>Eliminar receta</Text>
+
+              <Text style={styles.deleteModalText}>
+                ¿Seguro que querés eliminar esta receta? Esta acción no se puede deshacer.
+              </Text>
+
+              <View style={styles.deleteModalActions}>
+                <Pressable
+                  style={styles.cancelDeleteButton}
+                  onPress={() => setIsDeleteModalVisible(false)}
+                >
+                  <Text style={styles.cancelDeleteButtonText}>Cancelar</Text>
+                </Pressable>
+
+                <Pressable
+                  style={styles.confirmDeleteButton}
+                  onPress={handleConfirmDeleteRecipe}
+                >
+                  <Text style={styles.confirmDeleteButtonText}>Eliminar</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </ItalianTableclothBackground>
   );
@@ -329,6 +389,100 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#555',
     lineHeight: 22,
+  },
+
+  deleteButton: {
+    marginTop: 12,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e63946',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+
+  deleteButtonText: {
+    color: '#e63946',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+
+  editButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: '#2f6f4e',
+    alignItems: 'center',
+  },
+
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  deleteModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+
+  deleteModalCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: '#ffffff',
+    borderRadius: 18,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+
+  deleteModalTitle: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#2b2d42',
+    marginBottom: 10,
+  },
+
+  deleteModalText: {
+    fontSize: 15,
+    color: '#555',
+    lineHeight: 22,
+    marginBottom: 18,
+  },
+
+  deleteModalActions: {
+    gap: 10,
+  },
+
+  cancelDeleteButton: {
+    backgroundColor: '#fff8f0',
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+
+  cancelDeleteButtonText: {
+    color: '#2b2d42',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+
+  confirmDeleteButton: {
+    backgroundColor: '#e63946',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+
+  confirmDeleteButtonText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '900',
   },
 });
 
