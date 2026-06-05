@@ -17,9 +17,13 @@ import PrimaryButton from '../components/PrimaryButton';
 import { useRecipes } from '../data/RecipesContext';
 import { RecipeStackParamList } from '../navigation/types';
 
-type Props = NativeStackScreenProps<RecipeStackParamList, 'RecipeCreate'> & {
-  mode?: 'create' | 'edit';
-};
+type Props =
+  | (NativeStackScreenProps<RecipeStackParamList, 'RecipeCreate'> & {
+    mode: 'create';
+  })
+  | (NativeStackScreenProps<RecipeStackParamList, 'RecipeEdit'> & {
+    mode: 'edit';
+  });
 
 type IngredientItem = {
   id: string;
@@ -27,19 +31,52 @@ type IngredientItem = {
   amount: string;
 };
 
-const RecipeFormScreen: React.FC<Props> = ({ navigation, mode = 'create' }) => {
-  const { addRecipe } = useRecipes();
+const parseIngredientsToItems = (ingredients?: string): IngredientItem[] => {
+  if (!ingredients) {
+    return [];
+  }
 
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
-  const [cookingTime, setCookingTime] = useState('');
-  const [steps, setSteps] = useState('');
-  const [imageUri, setImageUri] = useState<string | undefined>(undefined);
+  return ingredients
+    .split('\n')
+    .filter((line) => line.trim().length > 0)
+    .map((line, index) => {
+      const [namePart, ...amountParts] = line.split(':');
+
+      return {
+        id: `${Date.now()}-${index}`,
+        name: namePart.trim(),
+        amount: amountParts.join(':').trim(),
+      };
+    });
+};
+
+const RecipeFormScreen: React.FC<Props> = (props) => {
+  const { navigation, mode } = props;
+  const { recipes, addRecipe, updateRecipe } = useRecipes();
+
+  const isEditing = mode === 'edit';
+  const recipeId = props.mode === 'edit' ? props.route.params.recipeId : undefined;
+
+  const recipeToEdit = recipeId
+    ? recipes.find((recipe) => recipe.id === recipeId)
+    : undefined;
+
+  const [title, setTitle] = useState(recipeToEdit?.title ?? '');
+  const [category, setCategory] = useState(recipeToEdit?.category ?? '');
+  const [description, setDescription] = useState(recipeToEdit?.description ?? '');
+  const [cookingTime, setCookingTime] = useState(
+    recipeToEdit?.cookingTime ? String(recipeToEdit.cookingTime) : ''
+  );
+  const [steps, setSteps] = useState(recipeToEdit?.steps ?? '');
+  const [imageUri, setImageUri] = useState<string | undefined>(
+    recipeToEdit?.imageUri
+  );
 
   const [ingredientName, setIngredientName] = useState('');
   const [ingredientAmount, setIngredientAmount] = useState('');
-  const [ingredientItems, setIngredientItems] = useState<IngredientItem[]>([]);
+  const [ingredientItems, setIngredientItems] = useState<IngredientItem[]>(
+    parseIngredientsToItems(recipeToEdit?.ingredients)
+  );
 
   const clearForm = () => {
     setTitle('');
@@ -171,7 +208,7 @@ const RecipeFormScreen: React.FC<Props> = ({ navigation, mode = 'create' }) => {
       .map((ingredient) => `${ingredient.name}: ${ingredient.amount}`)
       .join('\n');
 
-    await addRecipe({
+    const recipeData = {
       title: title.trim(),
       category: category.trim(),
       description: description.trim(),
@@ -179,18 +216,32 @@ const RecipeFormScreen: React.FC<Props> = ({ navigation, mode = 'create' }) => {
       steps: steps.trim(),
       cookingTime: Number(cookingTime),
       imageUri,
-      isFavorite: false,
-    });
+      isFavorite: recipeToEdit?.isFavorite ?? false,
+    };
+
+    if (isEditing && recipeId) {
+      await updateRecipe(recipeId, recipeData);
+    } else {
+      await addRecipe(recipeData);
+    }
 
     clearForm();
 
     Alert.alert(
-      'Receta guardada',
-      'La receta fue agregada a tu recetario correctamente.',
+      isEditing ? 'Receta actualizada' : 'Receta guardada',
+      isEditing
+        ? 'Los cambios fueron guardados correctamente.'
+        : 'La receta fue agregada a tu recetario correctamente.',
       [
         {
-          text: 'Ver recetas',
-          onPress: () => navigation.navigate('RecipeList'),
+          text: isEditing ? 'Volver al detalle' : 'Ver recetas',
+          onPress: () => {
+            if (isEditing && recipeId) {
+              navigation.navigate('RecipeDetail', { recipeId });
+            } else {
+              navigation.navigate('RecipeList');
+            }
+          },
         },
       ]
     );
@@ -201,7 +252,7 @@ const RecipeFormScreen: React.FC<Props> = ({ navigation, mode = 'create' }) => {
       <SafeAreaView style={styles.screen}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.title}>
-            {mode === 'create' ? 'Nueva receta' : 'Editar receta'}
+            {isEditing ? 'Editar receta' : 'Nueva receta'}
           </Text>
 
           <Text style={styles.helperText}>
@@ -319,7 +370,10 @@ const RecipeFormScreen: React.FC<Props> = ({ navigation, mode = 'create' }) => {
             multiline
           />
 
-          <PrimaryButton label="Guardar receta" onPress={handleSave} />
+          <PrimaryButton
+            label={isEditing ? 'Guardar cambios' : 'Guardar receta'}
+            onPress={handleSave}
+          />
         </ScrollView>
       </SafeAreaView>
     </ItalianTableclothBackground>

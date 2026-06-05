@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
+  Alert,
   Image,
   Modal,
   Pressable,
@@ -26,8 +27,8 @@ const parseIngredientLine = (line: string) => {
   };
 };
 
-const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
-  const { recipes, toggleFavorite } = useRecipes();
+const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
+  const { recipes, toggleFavorite, deleteRecipe } = useRecipes();
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
   const { recipeId } = route.params;
@@ -56,6 +57,28 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
   const handleToggleFavorite = async () => {
     await toggleFavorite(recipe.id);
   };
+
+  const handleDeleteRecipe = () => {
+    Alert.alert(
+      'Eliminar receta',
+      '¿Seguro que querés eliminar esta receta? Esta acción no se puede deshacer.',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteRecipe(recipe.id);
+            navigation.navigate('RecipeList');
+          },
+        },
+      ]
+    );
+  };
+
 
   return (
     <ItalianTableclothBackground>
@@ -106,7 +129,20 @@ const RecipeDetailScreen: React.FC<Props> = ({ route }) => {
                     : 'Agregar a favoritas'}
                 </Text>
               </Pressable>
+
+              <Pressable
+                style={styles.editButton}
+                onPress={() => navigation.navigate('RecipeEdit', { recipeId })}
+              >
+                <Text style={styles.editButtonText}>Editar receta</Text>
+              </Pressable>
             </View>
+          </View>
+
+          <View style={styles.detailActions}>
+            <Pressable style={styles.deleteButton} onPress={handleDeleteRecipe}>
+              <Text style={styles.deleteButtonText}>Eliminar receta</Text>
+            </Pressable>
           </View>
 
           <View style={styles.sectionCard}>
@@ -329,6 +365,39 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#555',
     lineHeight: 22,
+  },
+  detailActions: {
+    marginTop: 12,
+  },
+
+  deleteButton: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e63946',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+
+  deleteButtonText: {
+    color: '#e63946',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+
+  editButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: '#2f6f4e',
+    alignItems: 'center',
+  },
+
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 
