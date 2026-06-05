@@ -136,13 +136,14 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
               >
                 <Text style={styles.editButtonText}>Editar receta</Text>
               </Pressable>
-            </View>
-          </View>
 
-          <View style={styles.detailActions}>
-            <Pressable style={styles.deleteButton} onPress={handleDeleteRecipe}>
-              <Text style={styles.deleteButtonText}>Eliminar receta</Text>
-            </Pressable>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={handleDeleteRecipe}
+              >
+                <Text style={styles.deleteButtonText}>Eliminar receta</Text>
+              </Pressable>
+            </View>
           </View>
 
           <View style={styles.sectionCard}>
@@ -366,11 +367,9 @@ const styles = StyleSheet.create({
     color: '#555',
     lineHeight: 22,
   },
-  detailActions: {
-    marginTop: 12,
-  },
 
   deleteButton: {
+    marginTop: 12,
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#e63946',

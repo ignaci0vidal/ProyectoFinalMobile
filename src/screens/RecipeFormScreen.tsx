@@ -220,31 +220,10 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
     };
 
     if (isEditing && recipeId) {
-      await updateRecipe(recipeId, recipeData);
+      navigation.navigate('RecipeDetail', { recipeId });
     } else {
-      await addRecipe(recipeData);
+      navigation.navigate('RecipeList');
     }
-
-    clearForm();
-
-    Alert.alert(
-      isEditing ? 'Receta actualizada' : 'Receta guardada',
-      isEditing
-        ? 'Los cambios fueron guardados correctamente.'
-        : 'La receta fue agregada a tu recetario correctamente.',
-      [
-        {
-          text: isEditing ? 'Volver al detalle' : 'Ver recetas',
-          onPress: () => {
-            if (isEditing && recipeId) {
-              navigation.navigate('RecipeDetail', { recipeId });
-            } else {
-              navigation.navigate('RecipeList');
-            }
-          },
-        },
-      ]
-    );
   };
 
   return (
