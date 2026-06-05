@@ -55,7 +55,8 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
   const { recipes, addRecipe, updateRecipe } = useRecipes();
 
   const isEditing = mode === 'edit';
-  const recipeId = props.mode === 'edit' ? props.route.params.recipeId : undefined;
+  const recipeId =
+    props.mode === 'edit' ? props.route.params.recipeId : undefined;
 
   const recipeToEdit = recipeId
     ? recipes.find((recipe) => recipe.id === recipeId)
@@ -63,7 +64,9 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
 
   const [title, setTitle] = useState(recipeToEdit?.title ?? '');
   const [category, setCategory] = useState(recipeToEdit?.category ?? '');
-  const [description, setDescription] = useState(recipeToEdit?.description ?? '');
+  const [description, setDescription] = useState(
+    recipeToEdit?.description ?? ''
+  );
   const [cookingTime, setCookingTime] = useState(
     recipeToEdit?.cookingTime ? String(recipeToEdit.cookingTime) : ''
   );
@@ -220,9 +223,12 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
     };
 
     if (isEditing && recipeId) {
+      await updateRecipe(recipeId, recipeData);
       navigation.navigate('RecipeDetail', { recipeId });
     } else {
-      navigation.popToTop();
+      await addRecipe(recipeData);
+      clearForm();
+      navigation.replace('RecipeList');
     }
   };
 

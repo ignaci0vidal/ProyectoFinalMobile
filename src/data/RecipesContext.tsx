@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import React, {
   createContext,
@@ -6,9 +7,12 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+
 import { Recipe } from '../types/recipe';
 import { useAuth } from './AuthContext';
 import { createStarterRecipesForUser, initialRecipes } from './initialRecipes';
+
+import { Platform } from 'react-native';
 
 type RecipeInput = Omit<Recipe, 'id' | 'createdAt' | 'userId'>;
 
@@ -21,6 +25,12 @@ type RecipesContextType = {
 };
 
 const RecipesContext = createContext<RecipesContextType | null>(null);
+
+//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes';
+//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users';
+const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v2';
+const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v2';
+
 
 export const useRecipes = () => {
   const context = useContext(RecipesContext);
@@ -40,13 +50,98 @@ const getSeededUserIds = () => {
   return Array.from(new Set(initialRecipes.map((recipe) => recipe.userId)));
 };
 
+const notifySuccess = async () => {
+  if (Platform.OS === 'web') return;
+
+  try {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  } catch (error) {
+    console.log('Haptics no disponible:', error);
+  }
+};
+
+const notifyWarning = async () => {
+  if (Platform.OS === 'web') return;
+
+  try {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+  } catch (error) {
+    console.log('Haptics no disponible:', error);
+  }
+};
+
+const notifyLightImpact = async () => {
+  if (Platform.OS === 'web') return;
+
+  try {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  } catch (error) {
+    console.log('Haptics no disponible:', error);
+  }
+};
+
 export const RecipesProvider: React.FC<Props> = ({ children }) => {
   const { currentUser } = useAuth();
 
-  const [allRecipes, setAllRecipes] = useState<Recipe[]>(initialRecipes);
-  const [seededUserIds, setSeededUserIds] = useState<string[]>(getSeededUserIds);
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+  const [seededUserIds, setSeededUserIds] = useState<string[]>([]);
+  const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
+
 
   useEffect(() => {
+    const loadRecipesFromStorage = async () => {
+      try {
+        const [storedRecipes, storedSeededUserIds] = await Promise.all([
+          AsyncStorage.getItem(RECIPES_STORAGE_KEY),
+          AsyncStorage.getItem(SEEDED_USERS_STORAGE_KEY),
+        ]);
+
+        if (storedRecipes) {
+          setAllRecipes(JSON.parse(storedRecipes));
+        } else {
+          setAllRecipes(initialRecipes);
+        }
+
+        if (storedSeededUserIds) {
+          setSeededUserIds(JSON.parse(storedSeededUserIds));
+        } else {
+          setSeededUserIds(getSeededUserIds());
+        }
+      } catch (error) {
+        console.log('Error al cargar recetas desde AsyncStorage:', error);
+      } finally {
+        setHasLoadedStorage(true);
+      }
+    };
+
+    loadRecipesFromStorage();
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedStorage) return;
+
+    const saveRecipesInStorage = async () => {
+      try {
+        await Promise.all([
+          AsyncStorage.setItem(
+            RECIPES_STORAGE_KEY,
+            JSON.stringify(allRecipes)
+          ),
+          AsyncStorage.setItem(
+            SEEDED_USERS_STORAGE_KEY,
+            JSON.stringify(seededUserIds)
+          ),
+        ]);
+      } catch (error) {
+        console.log('Error al guardar recetas en AsyncStorage:', error);
+      }
+    };
+
+    saveRecipesInStorage();
+  }, [allRecipes, seededUserIds, hasLoadedStorage]);
+
+  useEffect(() => {
+    if (!hasLoadedStorage) return;
     if (!currentUser) return;
 
     const alreadySeeded = seededUserIds.includes(currentUser.id);
@@ -57,7 +152,7 @@ export const RecipesProvider: React.FC<Props> = ({ children }) => {
 
     setAllRecipes((prev) => [...starterRecipes, ...prev]);
     setSeededUserIds((prev) => [...prev, currentUser.id]);
-  }, [currentUser, seededUserIds]);
+  }, [currentUser, seededUserIds, hasLoadedStorage]);
 
   const recipes = useMemo(() => {
     if (!currentUser) return [];
@@ -77,7 +172,7 @@ export const RecipesProvider: React.FC<Props> = ({ children }) => {
 
     setAllRecipes((prev) => [newRecipe, ...prev]);
 
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await notifySuccess();
   };
 
   const updateRecipe = async (recipeId: string, data: RecipeInput) => {
@@ -107,7 +202,7 @@ export const RecipesProvider: React.FC<Props> = ({ children }) => {
       )
     );
 
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    await notifyWarning();
   };
 
   const toggleFavorite = async (recipeId: string) => {
@@ -124,7 +219,7 @@ export const RecipesProvider: React.FC<Props> = ({ children }) => {
       )
     );
 
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    await notifyLightImpact();
   };
 
   const value = useMemo(
