@@ -7,12 +7,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { Platform } from 'react-native';
 
 import { Recipe } from '../types/recipe';
 import { useAuth } from './AuthContext';
 import { createStarterRecipesForUser, initialRecipes } from './initialRecipes';
-
-import { Platform } from 'react-native';
 
 type RecipeInput = Omit<Recipe, 'id' | 'createdAt' | 'userId'>;
 
