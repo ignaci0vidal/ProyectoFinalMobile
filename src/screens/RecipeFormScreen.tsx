@@ -222,7 +222,7 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
     if (isEditing && recipeId) {
       navigation.navigate('RecipeDetail', { recipeId });
     } else {
-      navigation.navigate('RecipeList');
+      navigation.popToTop();
     }
   };
 
