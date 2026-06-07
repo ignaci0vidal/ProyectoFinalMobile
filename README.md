@@ -10,7 +10,7 @@ El proyecto fue realizado como Trabajo Práctico Integrador de la materia **Desa
 
 **miKitchen** funciona como un recetario digital personal. Cada usuario puede acceder a sus propias recetas y administrarlas desde una interfaz visual, simple y adaptada tanto para dispositivo móvil como para navegador web.
 
-La aplicación integra navegación por pestañas, navegación por stack, formularios con validaciones, manejo de estado global, carga de imágenes, feedback háptico, búsqueda dinámica, favoritos, categorías, timer de cocción y una organización de código pensada para facilitar su mantenimiento.
+El código está separado por pantallas, componentes, navegación, datos y tipos para que sea más fácil de leer y explicar durante la defensa.
 
 ---
 
@@ -49,11 +49,12 @@ La aplicación integra navegación por pestañas, navegación por stack, formula
 - Bottom Tab Navigator
 - Native Stack Navigator
 - Context API
+- AsyncStorage
 - Expo Image Picker
 - Expo Haptics
 - Expo Audio
-- Ionicons
-- AsyncStorage, si está instalado y utilizado en el proyecto
+- Expo Vector Icons / Ionicons
+- React Native Picker
 
 ---
 
@@ -300,19 +301,17 @@ Esta funcionalidad se plantea como una posible expansión comercial o modelo pre
 
 ## Uso de inteligencia artificial
 
-Durante el desarrollo del proyecto se utilizó inteligencia artificial, específicamente ChatGPT, como herramienta de apoyo para analizar errores, organizar tareas, revisar fragmentos de código y proponer mejoras de implementación.
+Durante el desarrollo utilicé ChatGPT como herramienta de apoyo para revisar errores, ordenar tareas, mejorar explicaciones técnicas y evaluar alternativas de implementación.
 
-El uso de IA estuvo orientado principalmente a:
+La IA se usó principalmente para:
 
-- Interpretar errores de TypeScript, React Native y navegación.
-- Revisar problemas de estructura JSX y componentes.
-- Proponer alternativas para mejorar la compatibilidad entre Expo Go en iPhone y ejecución en navegador.
-- Asistir en la implementación del CRUD de recetas.
-- Orientar mejoras de diseño, usabilidad y organización visual.
-- Mejorar la redacción técnica de la documentación del proyecto.
-- Preparar explicaciones técnicas para la defensa oral.
+- Analizar errores de TypeScript, React Native y navegación.
+- Revisar estructura de componentes y JSX.
+- Pensar mejoras de usabilidad y diseño visual.
+- Redactar y corregir documentación técnica.
+- Preparar explicaciones para la defensa oral.
 
-Las decisiones finales de implementación, pruebas funcionales, adaptación del código al proyecto y validación en dispositivos fueron realizadas manualmente durante el desarrollo.
+El código fue adaptado, probado y validado manualmente en el proyecto. Las decisiones finales de implementación fueron realizadas por mí.
 
 ---
 
@@ -343,20 +342,23 @@ Desde Expo se puede ejecutar la app en:
 Algunas dependencias relevantes del proyecto son:
 
 ```txt
-@react-navigation/native
-@react-navigation/bottom-tabs
-@react-navigation/native-stack
-@react-native-picker/picker
-expo-image-picker
-expo-haptics
-expo-audio
+@expo/metro-runtime
 @expo/vector-icons
-```
-
-Si el proyecto utiliza persistencia local con AsyncStorage, también corresponde incluir:
-
-```txt
 @react-native-async-storage/async-storage
+@react-native-picker/picker
+@react-navigation/bottom-tabs
+@react-navigation/native
+@react-navigation/native-stack
+expo
+expo-audio
+expo-haptics
+expo-image-picker
+expo-status-bar
+react
+react-native
+react-native-safe-area-context
+react-native-screens
+react-native-web
 ```
 
 ---
