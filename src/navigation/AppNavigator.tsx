@@ -78,9 +78,9 @@ const MainTabs: React.FC = () => {
           marginBottom: 2,
         },
         tabBarStyle: {
-          height: 82,
+          height: 94,
           paddingTop: 8,
-          paddingBottom: 18,
+          paddingBottom: 30,
           backgroundColor: '#ffffff',
           borderTopWidth: 1,
           borderTopColor: '#f0dfd2',
