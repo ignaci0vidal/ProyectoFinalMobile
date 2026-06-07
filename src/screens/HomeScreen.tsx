@@ -134,9 +134,8 @@ const styles = StyleSheet.create({
     color: '#2b2d42',
   },
   subtitle: {
-    marginTop: 10,
-    fontSize: 18,
-    lineHeight: 24,
+    fontSize: 17,
+    lineHeight: 22,
     color: '#555',
     fontWeight: '600',
   },
@@ -276,11 +275,14 @@ const styles = StyleSheet.create({
   },
   descriptionCard: {
     backgroundColor: 'rgba(255, 250, 242, 0.94)',
-    padding: 16,
+    minHeight: 48,
+    paddingVertical: 16,
+    paddingHorizontal: 22,
     borderRadius: 18,
     marginBottom: 22,
     borderWidth: 1,
     borderColor: '#f0dfd2',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 30,
