@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 
 import { useAuth } from '../data/AuthContext';
+import { useRecipes } from '../data/RecipesContext';
 import CategoriesScreen from '../screens/CategoriesScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -15,6 +16,8 @@ import SettingsScreen from '../screens/SettingsScreen';
 import SignupScreen from '../screens/SignupScreen';
 import TimerScreen from '../screens/TimerScreen';
 import { RecipeStackParamList, RootTabParamList } from './types';
+
+import { StyleSheet, Text, View } from 'react-native';
 
 import FavoriteRecipesScreen from '../screens/FavoriteRecipesScreen';
 
@@ -66,6 +69,9 @@ const RecipesStackScreen: React.FC = () => {
 };
 
 const MainTabs: React.FC = () => {
+  const { recipes } = useRecipes();
+  const totalRecipes = recipes.length;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -76,6 +82,18 @@ const MainTabs: React.FC = () => {
           fontSize: 14,
           fontWeight: '700',
           marginBottom: 2,
+        },
+        tabBarBadgeStyle: {
+          backgroundColor: '#e76f51',
+          color: '#ffffff',
+          fontWeight: '500',
+          fontSize: 11,
+          minWidth: 18,
+          height: 18,
+          borderRadius: 9,
+          lineHeight: 16,
+          top: -8,
+          right: -8,
         },
         tabBarStyle: {
           height: 94,
@@ -93,12 +111,28 @@ const MainTabs: React.FC = () => {
           if (route.name === 'Timer') iconName = 'timer-outline';
           if (route.name === 'Ajustes') iconName = 'settings-outline';
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          const shouldShowRecipesBadge = route.name === 'Recetas' && totalRecipes > 0;
+
+          return (
+            <View style={styles.tabIconContainer}>
+              <Ionicons name={iconName} size={size} color={color} />
+
+              {shouldShowRecipesBadge && (
+                <View style={styles.recipesBadge}>
+                  <Text style={styles.recipesBadgeText}>{totalRecipes}</Text>
+                </View>
+              )}
+            </View>
+          );
         },
       })}
     >
       <Tab.Screen name="Inicio" component={HomeScreen} />
-      <Tab.Screen name="Recetas" component={RecipesStackScreen} />
+      <Tab.Screen
+        name="Recetas"
+        component={RecipesStackScreen}
+
+      />
       <Tab.Screen name="Timer" component={TimerScreen} />
       <Tab.Screen name="Ajustes" component={SettingsScreen} />
     </Tab.Navigator>
@@ -121,5 +155,32 @@ const AppNavigator: React.FC = () => {
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  tabIconContainer: {
+    width: 34,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recipesBadge: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#e76f51',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  recipesBadgeText: {
+    color: '#ffffff',
+    fontSize: 11,
+    fontWeight: '900',
+    lineHeight: 13,
+  },
+});
 
 export default AppNavigator;
