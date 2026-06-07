@@ -32,7 +32,15 @@ const SettingsScreen: React.FC = () => {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Ajustes</Text>
+          <View style={styles.titleCard}>
+            <Text style={styles.title}>Ajustes</Text>
+          </View>
+
+          <View style={styles.descriptionCard}>
+            <Text style={styles.description}>
+              Revisá tu usuario, la información de la app y las opciones de sesión.
+            </Text>
+          </View>
 
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Usuario actual</Text>
@@ -131,16 +139,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 16,
+    paddingHorizontal: 32,
+    paddingTop: 32,
     paddingBottom: 120,
   },
-  title: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#2b2d42',
-    marginBottom: 16,
-    marginLeft: 16,
-  },
+
   infoBox: {
     backgroundColor: 'rgba(255, 250, 242, 0.94)',
     padding: 16,
@@ -235,6 +238,69 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 15,
     fontWeight: '900',
+  },
+  headerCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    padding: 22,
+    borderRadius: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+
+    elevation: 3,
+  },
+  subtitle: {
+    marginTop: 8,
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#555',
+    fontWeight: '600',
+  },
+  titleCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    paddingVertical: 18,
+    paddingHorizontal: 22,
+    borderRadius: 20,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+
+    elevation: 3,
+  },
+  descriptionCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    padding: 16,
+    borderRadius: 18,
+    marginBottom: 22,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '800',
+    color: '#2b2d42',
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#555',
+    fontWeight: '600',
   },
 });
 
