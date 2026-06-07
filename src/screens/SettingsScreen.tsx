@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Modal,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -26,58 +27,64 @@ const SettingsScreen: React.FC = () => {
   return (
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
-        <Text style={styles.title}>Ajustes</Text>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Ajustes</Text>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Usuario actual</Text>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Usuario actual</Text>
 
-          <Text style={styles.label}>Nombre</Text>
-          <Text style={styles.infoText}>{currentUser?.name}</Text>
+            <Text style={styles.label}>Nombre</Text>
+            <Text style={styles.infoText}>{currentUser?.name}</Text>
 
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.infoText}>{currentUser?.email}</Text>
+            <Text style={styles.label}>Email</Text>
+            <Text style={styles.infoText}>{currentUser?.email}</Text>
 
-          <Text style={styles.label}>Rol</Text>
-          <Text style={styles.infoText}>
-            {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
-          </Text>
-        </View>
+            <Text style={styles.label}>Rol</Text>
+            <Text style={styles.infoText}>
+              {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
+            </Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Acerca de miKitchen</Text>
-          <Text style={styles.infoText}>
-            Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
-            de Aplicaciones para Dispositivos Móviles.
-          </Text>
-        </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Acerca de miKitchen</Text>
+            <Text style={styles.infoText}>
+              Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
+              de Aplicaciones para Dispositivos Móviles.
+            </Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Objetivo de la app</Text>
-          <Text style={styles.infoText}>
-            Guardar recetas propias, organizarlas por categoría, documentarlas con
-            foto y usar un timer simple durante la cocción.
-          </Text>
-        </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Objetivo de la app</Text>
+            <Text style={styles.infoText}>
+              Guardar recetas propias, organizarlas por categoría, documentarlas con
+              foto y usar un timer simple durante la cocción.
+            </Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
-          <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
-          <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
-          <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
-        </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
+            <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
+            <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
+            <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Tecnologías</Text>
-          <Text style={styles.infoText}>• React Native</Text>
-          <Text style={styles.infoText}>• Expo</Text>
-          <Text style={styles.infoText}>• TypeScript</Text>
-          <Text style={styles.infoText}>• React Navigation</Text>
-          <Text style={styles.infoText}>• Context API para usuarios y recetas</Text>
-        </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Tecnologías</Text>
+            <Text style={styles.infoText}>• React Native</Text>
+            <Text style={styles.infoText}>• Expo</Text>
+            <Text style={styles.infoText}>• TypeScript</Text>
+            <Text style={styles.infoText}>• React Navigation</Text>
+            <Text style={styles.infoText}>• Context API para usuarios y recetas</Text>
+          </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </ScrollView>
 
         <Modal
           visible={showLogoutModal}
@@ -119,7 +126,13 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'transparent',
+  },
+  scroll: {
+    flex: 1,
+  },
+  content: {
     padding: 16,
+    paddingBottom: 120,
   },
   title: {
     fontSize: 26,

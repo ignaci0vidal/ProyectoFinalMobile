@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
     Alert,
     SafeAreaView,
+    ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -107,13 +108,19 @@ const TimerScreen: React.FC = () => {
     return (
         <ItalianTableclothBackground>
             <SafeAreaView style={styles.screen}>
-                <View style={styles.content}>
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={styles.content}
+                    showsVerticalScrollIndicator={false}
+                >
                     <Text style={styles.title}>Timer de cocción</Text>
 
-                    <Text style={styles.description}>
-                        Seleccioná minutos y segundos para controlar tiempos de cocción dentro
-                        de miKitchen.
-                    </Text>
+                    <View style={styles.descriptionCard}>
+                        <Text style={styles.description}>
+                            Seleccioná minutos y segundos para controlar tiempos de cocción dentro
+                            de miKitchen.
+                        </Text>
+                    </View>
 
                     <View style={styles.card}>
                         <View style={styles.pickerRow}>
@@ -185,7 +192,7 @@ const TimerScreen: React.FC = () => {
                             Este timer permite seleccionar tiempos concretos de cocción. Es ideal para controlar tiempos de horneado, hervor o cualquier proceso que requiera un tiempo específico. Recordá iniciar el timer al comenzar la cocción y detenerlo o reiniciarlo según necesites.
                         </Text>
                     </View>
-                </View>
+                </ScrollView>
             </SafeAreaView>
         </ItalianTableclothBackground>
     );
@@ -196,14 +203,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'transparent',
     },
-    content: {
+    scroll: {
         flex: 1,
+    },
+    content: {
         width: '100%',
         maxWidth: 920,
         alignSelf: 'center',
         paddingHorizontal: 32,
         paddingTop: 32,
-        paddingBottom: 40,
+        paddingBottom: 120,
     },
     title: {
         fontSize: 26,
@@ -215,7 +224,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#666',
         lineHeight: 21,
-        marginBottom: 20,
     },
     card: {
         backgroundColor: '#ffffff',
@@ -325,6 +333,14 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#2b2d42',
         marginBottom: 6,
+    },
+    descriptionCard: {
+        backgroundColor: 'rgba(255, 250, 242, 0.94)',
+        padding: 16,
+        borderRadius: 16,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#f0dfd2',
     },
 });
 
