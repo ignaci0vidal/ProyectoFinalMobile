@@ -1,10 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -20,7 +21,29 @@ type Props = NativeStackScreenProps<RecipeStackParamList, 'RecipeList'>;
 const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
   const { recipes } = useRecipes();
 
+  const [searchText, setSearchText] = useState('');
+
   const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite).length;
+
+  const normalizeText = (text: string) =>
+    text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+  const normalizedSearchText = normalizeText(searchText.trim());
+
+  const filteredRecipes = recipes.filter((recipe) => {
+    if (!normalizedSearchText) return true;
+
+    const title = normalizeText(recipe.title);
+    const ingredients = normalizeText(recipe.ingredients);
+
+    return (
+      title.includes(normalizedSearchText) ||
+      ingredients.includes(normalizedSearchText)
+    );
+  });
 
   return (
     <ItalianTableclothBackground>
@@ -52,14 +75,31 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.secondaryActionText}>Categorías</Text>
             </TouchableOpacity>
           </View>
+
+          <TextInput
+            style={styles.searchInput}
+            value={searchText}
+            onChangeText={setSearchText}
+            placeholder="Buscar por receta o ingrediente..."
+            placeholderTextColor="#8d8d8d"
+            autoCapitalize="none"
+            autoCorrect={false}
+            clearButtonMode="while-editing"
+          />
         </View>
 
         <FlatList
-          data={recipes}
+          data={filteredRecipes}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
-            <EmptyState message="Todavía no hay recetas cargadas." />
+            <EmptyState
+              message={
+                searchText.trim()
+                  ? 'No encontramos recetas con esa búsqueda.'
+                  : 'Todavía no hay recetas cargadas.'
+              }
+            />
           }
           renderItem={({ item }) => (
             <RecipeCard
@@ -98,6 +138,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     marginTop: 12,
+  },
+  searchInput: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+    borderRadius: 16,
+    paddingVertical: 13,
+    paddingHorizontal: 16,
+    marginTop: 12,
+    fontSize: 16,
+    color: '#2b2d42',
   },
   primaryAction: {
     backgroundColor: '#e76f51',
