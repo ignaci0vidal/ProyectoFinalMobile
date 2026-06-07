@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     titleCard: {
-        backgroundColor: 'rgba(255, 250, 242, 0.94)',
+        backgroundColor: 'rgba(255, 244, 230, 0.96)',
         paddingVertical: 18,
         paddingHorizontal: 22,
         borderRadius: 20,
