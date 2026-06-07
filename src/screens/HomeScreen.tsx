@@ -69,9 +69,7 @@ const HomeScreen: React.FC = () => {
             </Pressable>
           </View>
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}></Text>
-
+          <View style={styles.timerCard}>
             <Pressable
               style={({ pressed }) => [
                 styles.timerButton,
@@ -294,6 +292,16 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: '#555',
     fontWeight: '600',
+  },
+  timerCard: {
+    backgroundColor: '#ffffff',
+    paddingVertical: 28,
+    paddingHorizontal: 22,
+    borderRadius: 18,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+    justifyContent: 'center',
   },
 });
 
