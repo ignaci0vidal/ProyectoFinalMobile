@@ -57,6 +57,16 @@ const SettingsScreen: React.FC = () => {
             </Text>
           </View>
 
+          {currentUser?.role === 'admin' && (
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>Panel administrador</Text>
+              <Text style={styles.infoText}>
+                En una próxima versión, este rol podría gestionar packs de recetas,
+                contenido destacado y usuarios registrados.
+              </Text>
+            </View>
+          )}
+
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Acerca de miKitchen</Text>
             <Text style={styles.infoText}>
