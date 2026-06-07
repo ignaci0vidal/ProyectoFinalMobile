@@ -67,21 +67,30 @@ ProyectoFinalMobile/
 │   │
 │   ├── assets/
 │   │   ├── recipes/
-│   │   │   └── Imágenes utilizadas para recetas precargadas
-│   │   └── sounds/
-│   │       └── Sonido utilizado por el timer
+│   │   │
+│   │   ├── sounds/
+│   │   │
+│   │   ├── adaptive-icon.png
+│   │   ├── favicon.png
+│   │   ├── icon.png
+│   │   ├── italian-tablecloth.png
+│   │   └── splash-icon.png
 │   │
 │   ├── components/
 │   │   ├── EmptyState.tsx
 │   │   ├── FormInput.tsx
 │   │   ├── ItalianTableclothBackground.tsx
 │   │   ├── PrimaryButton.tsx
-│   │   └── RecipeCard.tsx
+│   │   ├── RecipeCard.tsx
+│   │   ├── Section.tsx
+│   │   ├── SummaryCard.tsx
+│   │   └── TableclothCard.tsx
 │   │
 │   ├── data/
 │   │   ├── AuthContext.tsx
-│   │   ├── RecipesContext.tsx
-│   │   └── initialRecipes.ts
+│   │   ├── initialRecipes.ts
+│   │   ├── initialUsers.ts
+│   │   └── RecipesContext.tsx
 │   │
 │   ├── navigation/
 │   │   ├── AppNavigator.tsx
@@ -99,11 +108,18 @@ ProyectoFinalMobile/
 │   │   ├── SignupScreen.tsx
 │   │   └── TimerScreen.tsx
 │   │
-│   └── types/
-│       └── recipe.ts
+│   ├── types/
+│   │   ├── recipe.tsx
+│   │   └── user.ts
+│   │
+│   └── utils/
+│       └── recipeHelpers.tsx
 │
+├── .gitignore
 ├── App.tsx
 ├── app.json
+├── ideas.md
+├── index.ts
 ├── package.json
 ├── package-lock.json
 └── README.md
