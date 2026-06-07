@@ -74,6 +74,24 @@ const SettingsScreen: React.FC = () => {
           </View>
 
           <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Próximas incorporaciones</Text>
+
+            <Text style={styles.infoText}>
+              en miKitchen podrás comprar packs de recetas, como:
+            </Text>
+
+            <Text style={styles.bulletItem}>• Cocina sin TACC</Text>
+            <Text style={styles.bulletItem}>• Cenas románticas</Text>
+            <Text style={styles.bulletItem}>• Comida china casera</Text>
+            <Text style={styles.bulletItem}>• Pastelería profesional</Text>
+
+            <Text style={styles.packsFinalText}>
+              Cada pack ofrecería recetas guiadas con ingredientes, pasos, fotos,
+              categorías, tiempos de cocción y timer integrado.
+            </Text>
+          </View>
+
+          <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
             <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
             <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
@@ -265,7 +283,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   titleCard: {
-    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    backgroundColor: 'rgba(255, 244, 230, 0.96)',
     paddingVertical: 18,
     paddingHorizontal: 22,
     borderRadius: 20,
@@ -301,6 +319,19 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: '#555',
     fontWeight: '600',
+  },
+  bulletItem: {
+    fontSize: 15,
+    color: '#555',
+    lineHeight: 22,
+    marginLeft: 8,
+    marginTop: 2,
+  },
+  packsFinalText: {
+    fontSize: 15,
+    color: '#555',
+    lineHeight: 21,
+    marginTop: 10,
   },
 });
 
