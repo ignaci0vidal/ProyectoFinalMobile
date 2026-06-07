@@ -27,7 +27,7 @@ const RecipesStackScreen: React.FC = () => {
       <RecipeStack.Screen
         name="RecipeList"
         component={RecipeListScreen}
-        options={{ title: 'Recetas' }}
+        options={{ headerShown: false }}
       />
 
       <RecipeStack.Screen
