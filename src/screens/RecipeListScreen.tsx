@@ -49,7 +49,15 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
         <View style={styles.headerContent}>
-          <Text style={styles.title}>Mis recetas</Text>
+          <View style={styles.titleCard}>
+            <Text style={styles.title}>Recetas</Text>
+          </View>
+
+          <View style={styles.descriptionCard}>
+            <Text style={styles.description}>
+              Buscá, organizá y creá tus recetas favoritas.
+            </Text>
+          </View>
 
           <TouchableOpacity
             style={styles.primaryAction}
@@ -119,17 +127,12 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'transparent',
-    paddingTop: 16,
+    paddingTop: 0,
   },
   headerContent: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#2b2d42',
-    marginBottom: 16,
+    paddingHorizontal: 32,
+    paddingTop: 32,
+    marginBottom: 12,
   },
   listContent: {
     paddingBottom: 24,
@@ -176,6 +179,69 @@ const styles = StyleSheet.create({
     color: '#2b2d42',
     fontWeight: '800',
     fontSize: 15,
+  },
+  headerCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    padding: 22,
+    borderRadius: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+
+    elevation: 3,
+  },
+  subtitle: {
+    marginTop: 8,
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#555',
+    fontWeight: '600',
+  },
+  titleCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    paddingVertical: 18,
+    paddingHorizontal: 22,
+    borderRadius: 20,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+
+    elevation: 3,
+  },
+  descriptionCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    padding: 16,
+    borderRadius: 18,
+    marginBottom: 22,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '800',
+    color: '#2b2d42',
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#555',
+    fontWeight: '600',
   },
 });
 

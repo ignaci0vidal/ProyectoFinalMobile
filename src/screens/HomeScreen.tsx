@@ -35,8 +35,11 @@ const HomeScreen: React.FC = () => {
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
         <View style={styles.content}>
-          <View style={styles.header}>
+          <View style={styles.titleCard}>
             <Text style={styles.appName}>miKitchen</Text>
+          </View>
+
+          <View style={styles.descriptionCard}>
             <Text style={styles.subtitle}>Tus recetas organizadas.</Text>
           </View>
 
@@ -107,8 +110,23 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 24,
   },
-  header: {
-    marginBottom: 30,
+  headerCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    padding: 22,
+    borderRadius: 20,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+
+    elevation: 3,
   },
   appName: {
     fontSize: 34,
@@ -236,6 +254,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
     textAlign: 'center',
+  },
+  titleCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    paddingVertical: 18,
+    paddingHorizontal: 22,
+    borderRadius: 20,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+
+    elevation: 3,
+  },
+  descriptionCard: {
+    backgroundColor: 'rgba(255, 250, 242, 0.94)',
+    padding: 16,
+    borderRadius: 18,
+    marginBottom: 22,
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '800',
+    color: '#2b2d42',
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#555',
+    fontWeight: '600',
   },
 });
 

@@ -113,12 +113,13 @@ const TimerScreen: React.FC = () => {
                     contentContainerStyle={styles.content}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Text style={styles.title}>Timer de cocción</Text>
+                    <View style={styles.titleCard}>
+                        <Text style={styles.title}>Timer de cocción</Text>
+                    </View>
 
                     <View style={styles.descriptionCard}>
                         <Text style={styles.description}>
-                            Seleccioná minutos y segundos para controlar tiempos de cocción dentro
-                            de miKitchen.
+                            Controlá tiempos de cocción con minutos, segundos, alerta y vibración.
                         </Text>
                     </View>
 
@@ -214,17 +215,7 @@ const styles = StyleSheet.create({
         paddingTop: 32,
         paddingBottom: 120,
     },
-    title: {
-        fontSize: 26,
-        fontWeight: '800',
-        color: '#2b2d42',
-        marginBottom: 10,
-    },
-    description: {
-        fontSize: 15,
-        color: '#666',
-        lineHeight: 21,
-    },
+
     card: {
         backgroundColor: '#ffffff',
         borderRadius: 18,
@@ -334,14 +325,71 @@ const styles = StyleSheet.create({
         color: '#2b2d42',
         marginBottom: 6,
     },
-    descriptionCard: {
+
+    headerCard: {
         backgroundColor: 'rgba(255, 250, 242, 0.94)',
-        padding: 16,
-        borderRadius: 16,
+        padding: 22,
+        borderRadius: 20,
         marginBottom: 20,
         borderWidth: 1,
         borderColor: '#f0dfd2',
+
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.12,
+        shadowRadius: 5,
+
+        elevation: 3,
     },
+    subtitle: {
+        marginTop: 8,
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#555',
+        fontWeight: '600',
+    },
+    titleCard: {
+        backgroundColor: 'rgba(255, 250, 242, 0.94)',
+        paddingVertical: 18,
+        paddingHorizontal: 22,
+        borderRadius: 20,
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: '#f0dfd2',
+
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.12,
+        shadowRadius: 5,
+
+        elevation: 3,
+    },
+    descriptionCard: {
+        backgroundColor: 'rgba(255, 250, 242, 0.94)',
+        padding: 16,
+        borderRadius: 18,
+        marginBottom: 22,
+        borderWidth: 1,
+        borderColor: '#f0dfd2',
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: '800',
+        color: '#2b2d42',
+    },
+    description: {
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#555',
+        fontWeight: '600',
+    },
+
 });
 
 export default TimerScreen;
