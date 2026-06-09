@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -37,6 +38,11 @@ const HomeScreen: React.FC = () => {
         <View style={styles.content}>
           <View style={styles.titleCard}>
             <Text style={styles.appName}>miKitchen</Text>
+
+            <Image
+              source={require('../assets/mk-logo.png')}
+              style={styles.homeLogo}
+            />
           </View>
 
           <View style={styles.descriptionCard}>
@@ -261,6 +267,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f0dfd2',
 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -302,6 +312,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f0dfd2',
     justifyContent: 'center',
+  },
+  homeLogo: {
+    width: 68,
+    height: 68,
+    resizeMode: 'contain',
   },
 });
 

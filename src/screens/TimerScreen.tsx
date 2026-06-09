@@ -3,6 +3,7 @@ import * as Haptics from 'expo-haptics';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Alert,
+    Image,
     SafeAreaView,
     ScrollView,
     StyleSheet,
@@ -115,6 +116,11 @@ const TimerScreen: React.FC = () => {
                 >
                     <View style={styles.titleCard}>
                         <Text style={styles.title}>Timer de cocción</Text>
+
+                        <Image
+                            source={require('../assets/mk-logo.png')}
+                            style={styles.titleLogo}
+                        />
                     </View>
 
                     <View style={styles.descriptionCard}>
@@ -369,6 +375,9 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
 
         elevation: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     descriptionCard: {
         backgroundColor: 'rgba(255, 250, 242, 0.94)',
@@ -388,6 +397,11 @@ const styles = StyleSheet.create({
         lineHeight: 22,
         color: '#555',
         fontWeight: '600',
+    },
+    titleLogo: {
+        width: 54,
+        height: 54,
+        resizeMode: 'contain',
     },
 
 });

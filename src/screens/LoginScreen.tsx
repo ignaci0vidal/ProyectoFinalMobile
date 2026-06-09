@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Image,
 } from 'react-native';
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useAuth } from '../data/AuthContext';
@@ -34,7 +35,10 @@ const LoginScreen: React.FC<Props> = ({ onGoToSignup }) => {
         <ItalianTableclothBackground>
             <SafeAreaView style={styles.screen}>
                 <View style={styles.card}>
-                    <Text style={styles.logo}>miKitchen</Text>
+                    <Image
+                        source={require('../assets/logo.png')}
+                        style={styles.logo}
+                    />
                     <Text style={styles.title}>Iniciar sesión</Text>
                     <Text style={styles.subtitle}>
                         Entrá con tu usuario para ver tus recetas.
@@ -96,21 +100,25 @@ const styles = StyleSheet.create({
         borderColor: '#f0dfd2',
     },
     logo: {
-        fontSize: 34,
-        fontWeight: '900',
-        color: '#22223b',
-        marginBottom: 6,
+        width: 345,
+        height: 217
+        ,
+        resizeMode: 'contain',
+        alignSelf: 'center',
+        marginBottom: 12,
     },
     title: {
         fontSize: 24,
         fontWeight: '800',
         color: '#2b2d42',
+        textAlign: 'center',
     },
     subtitle: {
         fontSize: 15,
         color: '#555',
         marginTop: 6,
         marginBottom: 20,
+        textAlign: 'center',
     },
     label: {
         fontSize: 14,
@@ -170,6 +178,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         marginTop: 2,
     },
+
 });
 
 export default LoginScreen;

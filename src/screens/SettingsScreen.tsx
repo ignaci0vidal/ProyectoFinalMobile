@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Image,
   Modal,
   SafeAreaView,
   ScrollView,
@@ -34,6 +35,10 @@ const SettingsScreen: React.FC = () => {
         >
           <View style={styles.titleCard}>
             <Text style={styles.title}>Ajustes</Text>
+            <Image
+              source={require('../assets/mk-logo.png')}
+              style={styles.titleLogo}
+            />
           </View>
 
           <View style={styles.descriptionCard}>
@@ -310,6 +315,9 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
 
     elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   descriptionCard: {
     backgroundColor: 'rgba(255, 250, 242, 0.94)',
@@ -342,6 +350,11 @@ const styles = StyleSheet.create({
     color: '#555',
     lineHeight: 21,
     marginTop: 10,
+  },
+  titleLogo: {
+    width: 54,
+    height: 54,
+    resizeMode: 'contain',
   },
 });
 
