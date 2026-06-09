@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD033 -->
+
 # Proyecto Final Mobile - miKitchen
 
 Aplicación móvil desarrollada con **Expo**, **React Native** y **TypeScript** para gestionar recetas de cocina de manera local.
@@ -6,8 +8,10 @@ El proyecto fue realizado como Trabajo Práctico Integrador de la materia **Desa
 
 ---
 
-## ![Logo de miKitchen](./docs/images/logo.png)
-
+<div align="center">
+  <img src="./docs/images/logo.png" width="180" alt="Logo de miKitchen" />
+</div>
+---
 ## Descripción general
 
 **miKitchen** funciona como un recetario digital personal. Cada usuario puede acceder a sus propias recetas y administrarlas desde una interfaz visual, simple y adaptada tanto para dispositivo móvil como para navegador web.
