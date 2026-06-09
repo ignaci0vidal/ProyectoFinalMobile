@@ -6,6 +6,8 @@ El proyecto fue realizado como Trabajo Práctico Integrador de la materia **Desa
 
 ---
 
+## ![Logo de miKitchen](./docs/images/logo.png)
+
 ## Descripción general
 
 **miKitchen** funciona como un recetario digital personal. Cada usuario puede acceder a sus propias recetas y administrarlas desde una interfaz visual, simple y adaptada tanto para dispositivo móvil como para navegador web.
