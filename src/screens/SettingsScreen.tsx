@@ -62,6 +62,10 @@ const SettingsScreen: React.FC = () => {
             </Text>
           </View>
 
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+          </TouchableOpacity>
+
           {currentUser?.role === 'admin' && (
             <View style={styles.infoBox}>
               <Text style={styles.infoTitle}>Panel administrador</Text>
@@ -122,9 +126,7 @@ const SettingsScreen: React.FC = () => {
             <Text style={styles.infoText}>• Context API para usuarios y recetas</Text>
           </View>
 
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
-          </TouchableOpacity>
+
         </ScrollView>
 
         <Modal
@@ -204,11 +206,12 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   logoutButton: {
-    backgroundColor: '#e76f51',
+    backgroundColor: '#e96a50',
+    borderRadius: 14,
     paddingVertical: 15,
-    borderRadius: 16,
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: 0,
+    marginBottom: 26,
   },
   logoutButtonText: {
     color: '#ffffff',
