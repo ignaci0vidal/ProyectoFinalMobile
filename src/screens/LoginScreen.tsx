@@ -9,6 +9,8 @@ import {
     View,
     Image,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useAuth } from '../data/AuthContext';
 
@@ -21,6 +23,7 @@ const LoginScreen: React.FC<Props> = ({ onGoToSignup }) => {
 
     const [email, setEmail] = useState('admin@mikitchen.com');
     const [password, setPassword] = useState('123456');
+    const [verPassword, setVerPassword] = useState(false);
 
     const handleLogin = () => {
         if (!email.trim() || !password.trim()) {
@@ -39,7 +42,9 @@ const LoginScreen: React.FC<Props> = ({ onGoToSignup }) => {
                         source={require('../assets/logo.png')}
                         style={styles.logo}
                     />
+
                     <Text style={styles.title}>Iniciar sesión</Text>
+
                     <Text style={styles.subtitle}>
                         Entrá con tu usuario para ver tus recetas.
                     </Text>
@@ -55,13 +60,27 @@ const LoginScreen: React.FC<Props> = ({ onGoToSignup }) => {
                     />
 
                     <Text style={styles.label}>Contraseña</Text>
-                    <TextInput
-                        value={password}
-                        onChangeText={setPassword}
-                        placeholder="mínimo 6 caracteres"
-                        secureTextEntry
-                        style={styles.input}
-                    />
+                    <View style={styles.passwordContainer}>
+                        <TextInput
+                            value={password}
+                            onChangeText={setPassword}
+                            placeholder="mínimo 6 caracteres"
+                            secureTextEntry={!verPassword}
+                            autoCapitalize="none"
+                            style={styles.passwordInput}
+                        />
+
+                        <TouchableOpacity
+                            onPress={() => setVerPassword(!verPassword)}
+                            style={styles.eyeButton}
+                        >
+                            <Ionicons
+                                name={verPassword ? 'eye-off' : 'eye'}
+                                size={24}
+                                color="#666"
+                            />
+                        </TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity style={styles.primaryButton} onPress={handleLogin}>
                         <Text style={styles.primaryButtonText}>Ingresar</Text>
@@ -102,8 +121,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: 345,
-        height: 217
-        ,
+        height: 217,
         resizeMode: 'contain',
         alignSelf: 'center',
         marginBottom: 12,
@@ -136,6 +154,26 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         marginBottom: 14,
         fontSize: 15,
+    },
+    passwordContainer: {
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#ead8ca',
+        borderRadius: 14,
+        paddingHorizontal: 14,
+        marginBottom: 14,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    passwordInput: {
+        flex: 1,
+        paddingVertical: 12,
+        fontSize: 15,
+        color: '#2b2d42',
+    },
+    eyeButton: {
+        paddingLeft: 10,
+        paddingVertical: 8,
     },
     primaryButton: {
         backgroundColor: '#e76f51',
@@ -179,7 +217,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         marginTop: 2,
     },
-
 });
 
 export default LoginScreen;
