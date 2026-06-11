@@ -74,9 +74,10 @@ const LoginScreen: React.FC<Props> = ({ onGoToSignup }) => {
                     </TouchableOpacity>
 
                     <View style={styles.demoBox}>
-                        <Text style={styles.demoTitle}>Usuarios demo</Text>
                         <Text style={styles.demoText}>Admin: admin@mikitchen.com</Text>
                         <Text style={styles.demoText}>Demo: demo@mikitchen.com</Text>
+                        <Text style={styles.demoText}>Usuario 1: usr1@mikitchen.com</Text>
+                        <Text style={styles.demoText}>Usuario 2: usr2@mikitchen.com</Text>
                         <Text style={styles.demoText}>Contraseña: 123456</Text>
                     </View>
                 </View>
