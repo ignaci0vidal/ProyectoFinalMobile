@@ -31,8 +31,15 @@ const RecipesContext = createContext<RecipesContextType | null>(null);
 //const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v2';
 //const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v3';
 //const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v3';
-const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v4';
-const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v4';
+//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v4';
+//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v4';
+//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v5';
+//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v5';
+//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v6';
+//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v6';
+const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v7';
+const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v7';
+
 
 
 export const useRecipes = () => {
@@ -57,7 +64,7 @@ const notifySuccess = async () => {
   if (Platform.OS === 'web') return;
 
   try {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await notifySuccess();
   } catch (error) {
     console.log('Haptics no disponible:', error);
   }
@@ -67,7 +74,7 @@ const notifyWarning = async () => {
   if (Platform.OS === 'web') return;
 
   try {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    await notifySuccess();
   } catch (error) {
     console.log('Haptics no disponible:', error);
   }
