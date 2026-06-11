@@ -25,20 +25,12 @@ type RecipesContextType = {
 
 const RecipesContext = createContext<RecipesContextType | null>(null);
 
-//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes';
-//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users';
-//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v2';
-//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v2';
-//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v3';
-//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v3';
-//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v4';
-//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v4';
-//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v5';
-//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v5';
-//const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v6';
-//const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v6';
-const RECIPES_STORAGE_KEY = '@proyecto_final_mobile_recipes_v7';
-const SEEDED_USERS_STORAGE_KEY = '@proyecto_final_mobile_seeded_users_v7';
+
+
+const STORAGE_VERSION = 'v7';
+
+const RECIPES_STORAGE_KEY = `@proyecto_final_mobile_recipes_${STORAGE_VERSION}`;
+const SEEDED_USERS_STORAGE_KEY = `@proyecto_final_mobile_seeded_users_${STORAGE_VERSION}`;
 
 
 
