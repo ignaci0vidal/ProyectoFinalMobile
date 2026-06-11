@@ -49,20 +49,52 @@ El código está separado por pantallas, componentes, navegación, datos y tipos
 
 ## Tecnologías utilizadas
 
-- Expo
-- React Native
-- TypeScript
-- React
-- React Navigation
-- Bottom Tab Navigator
-- Native Stack Navigator
-- Context API
-- AsyncStorage
-- Expo Image Picker
-- Expo Haptics
-- Expo Audio
-- Expo Vector Icons / Ionicons
-- React Native Picker
+<table>
+  <tr>
+    <td align="center" width="120">
+      <img src="https://cdn.simpleicons.org/expo/FFFFFF" width="42" height="42" alt="Expo" />
+      <br />
+      <sub><b>Expo & Expo Go</b></sub>
+    </td>
+    <td align="center" width="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" width="42" height="42" alt="React Native" />
+      <br />
+      <sub><b>React Native</b></sub>
+    </td>
+    <td align="center" width="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" width="42" height="42" alt="TypeScript" />
+      <br />
+      <sub><b>TypeScript</b></sub>
+    </td>    
+    <td align="center" width="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" width="42" height="42" alt="GitHub" />
+      <br />
+      <sub><b>GitHub</b></sub>
+    </td>
+    <td align="center" width="120">
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg"
+    width="42"
+    height="42"
+    alt="Git"
+  />
+  <br />
+  <sub><b>Git</b></sub>
+</td>
+    <td align="center" width="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" width="42" height="42" alt="Visual Studio Code" />
+      <br />
+      <sub><b>VS Code</b></sub>
+    </td>
+  </tr>
+  
+</table>
+
+### Librerías y herramientas
+
+`Expo` · `React Navigation` · `Bottom Tabs` · `Native Stack`  
+`Context API` · `AsyncStorage` · `Image Picker` · `Haptics`  
+`Expo Audio` · `Ionicons` · `React Native Picker`
 
 ---
 
