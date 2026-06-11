@@ -65,7 +65,7 @@ El código está separado por pantallas, componentes, navegación, datos y tipos
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" width="42" height="42" alt="TypeScript" />
       <br />
       <sub><b>TypeScript</b></sub>
-    </td>    
+    </td>
     <td align="center" width="120">
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" width="42" height="42" alt="GitHub" />
       <br />
