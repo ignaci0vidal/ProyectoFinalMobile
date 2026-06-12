@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
+
 import { useAuth } from '../data/AuthContext';
 
 type Props = {
