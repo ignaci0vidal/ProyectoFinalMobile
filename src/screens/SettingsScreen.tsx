@@ -1,23 +1,63 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Image,
   Modal,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useAuth } from '../data/AuthContext';
 
+const upcomingRecipePacks = [
+  'Recetas sin TACC',
+  'Salsas',
+  'Postres',
+  'Arroces',
+  'Pescados',
+  'Ensaladas',
+  'Comida thai',
+];
+
 const SettingsScreen: React.FC = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, updateProfile } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [name, setName] = useState(currentUser?.name ?? '');
+  const [email, setEmail] = useState(currentUser?.email ?? '');
+  const [password, setPassword] = useState('');
 
   const handleLogout = () => {
     setShowLogoutModal(true);
+  };
+
+  const handleUpcomingPackPress = (packName: string) => {
+    Alert.alert('Próximamente', `${packName} estará disponible en una próxima versión.`);
+  };
+
+  const openEditModal = () => {
+    setName(currentUser?.name ?? '');
+    setEmail(currentUser?.email ?? '');
+    setPassword('');
+    setShowEditModal(true);
+  };
+
+  const handleSaveProfile = () => {
+    const wasUpdated = updateProfile({
+      name,
+      email,
+      password,
+    });
+
+    if (wasUpdated) {
+      setShowEditModal(false);
+      setPassword('');
+    }
   };
 
   const confirmLogout = () => {
@@ -43,12 +83,12 @@ const SettingsScreen: React.FC = () => {
 
           <View style={styles.descriptionCard}>
             <Text style={styles.description}>
-              Revisá tu usuario, la información de la app y las opciones de sesión.
+              Administrá tu perfil y las opciones de sesión.
             </Text>
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Usuario actual</Text>
+            <Text style={styles.infoTitle}>Perfil</Text>
 
             <Text style={styles.label}>Nombre</Text>
             <Text style={styles.infoText}>{currentUser?.name}</Text>
@@ -60,6 +100,10 @@ const SettingsScreen: React.FC = () => {
             <Text style={styles.infoText}>
               {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
             </Text>
+
+            <TouchableOpacity style={styles.editProfileButton} onPress={openEditModal}>
+              <Text style={styles.editProfileButtonText}>Editar perfil</Text>
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -79,34 +123,8 @@ const SettingsScreen: React.FC = () => {
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Acerca de miKitchen</Text>
             <Text style={styles.infoText}>
-              Aplicación desarrollada como Trabajo Práctico Integrador de Desarrollo
-              de Aplicaciones para Dispositivos Móviles.
-            </Text>
-          </View>
-
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Objetivo de la app</Text>
-            <Text style={styles.infoText}>
-              Guardar recetas propias, organizarlas por categoría, documentarlas con
-              foto y usar un timer simple durante la cocción.
-            </Text>
-          </View>
-
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Próximas incorporaciones</Text>
-
-            <Text style={styles.infoText}>
-              en miKitchen podrás comprar packs de recetas, como:
-            </Text>
-
-            <Text style={styles.bulletItem}>• Cocina sin TACC</Text>
-            <Text style={styles.bulletItem}>• Cenas románticas</Text>
-            <Text style={styles.bulletItem}>• Comida china casera</Text>
-            <Text style={styles.bulletItem}>• Pastelería profesional</Text>
-
-            <Text style={styles.packsFinalText}>
-              Cada pack ofrecería recetas guiadas con ingredientes, pasos, fotos,
-              categorías, tiempos de cocción y timer integrado.
+              miKitchen guarda recetas propias, fotos, favoritos y datos de usuario
+              de forma local en este dispositivo.
             </Text>
           </View>
 
@@ -117,17 +135,85 @@ const SettingsScreen: React.FC = () => {
             <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
           </View>
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Tecnologías</Text>
-            <Text style={styles.infoText}>• React Native</Text>
-            <Text style={styles.infoText}>• Expo</Text>
-            <Text style={styles.infoText}>• TypeScript</Text>
-            <Text style={styles.infoText}>• React Navigation</Text>
-            <Text style={styles.infoText}>• Context API para usuarios y recetas</Text>
+          <View style={[styles.infoBox, styles.upcomingBox]}>
+            <Text style={[styles.infoTitle, styles.upcomingTitle]}>Próximamente</Text>
+            <Text style={[styles.infoText, styles.upcomingDescription]}>
+              Packs temáticos para ampliar tu recetario.
+            </Text>
+
+            <View style={styles.upcomingPacksGrid}>
+              {upcomingRecipePacks.map((packName) => (
+                <TouchableOpacity
+                  key={packName}
+                  style={styles.upcomingPackButton}
+                  onPress={() => handleUpcomingPackPress(packName)}
+                >
+                  <Text style={styles.upcomingPackButtonText}>{packName}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-
-
         </ScrollView>
+
+        <Modal
+          visible={showEditModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowEditModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Editar perfil</Text>
+              <Text style={styles.modalText}>
+                Actualizá tus datos. Dejá la contraseña vacía si no querés cambiarla.
+              </Text>
+
+              <Text style={styles.inputLabel}>Nombre</Text>
+              <TextInput
+                value={name}
+                onChangeText={setName}
+                placeholder="Tu nombre"
+                style={styles.input}
+              />
+
+              <Text style={styles.inputLabel}>Email</Text>
+              <TextInput
+                value={email}
+                onChangeText={setEmail}
+                placeholder="tu@email.com"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={styles.input}
+              />
+
+              <Text style={styles.inputLabel}>Nueva contraseña</Text>
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Opcional"
+                autoCapitalize="none"
+                secureTextEntry
+                style={styles.input}
+              />
+
+              <View style={styles.modalActions}>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => setShowEditModal(false)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.confirmButton}
+                  onPress={handleSaveProfile}
+                >
+                  <Text style={styles.confirmButtonText}>Guardar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
         <Modal
           visible={showLogoutModal}
@@ -218,6 +304,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
   },
+  editProfileButton: {
+    backgroundColor: '#2f6f4e',
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  editProfileButtonText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '900',
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.35)',
@@ -244,6 +342,23 @@ const styles = StyleSheet.create({
     color: '#555',
     lineHeight: 22,
     marginBottom: 18,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#2b2d42',
+    marginBottom: 6,
+  },
+  input: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#ead8ca',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 14,
+    fontSize: 15,
+    color: '#2b2d42',
   },
   modalActions: {
     flexDirection: 'row',
@@ -341,18 +456,53 @@ const styles = StyleSheet.create({
     color: '#555',
     fontWeight: '600',
   },
-  bulletItem: {
-    fontSize: 15,
-    color: '#555',
-    lineHeight: 22,
-    marginLeft: 8,
-    marginTop: 2,
+  upcomingPacksGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 14,
+    marginTop: 18,
   },
-  packsFinalText: {
-    fontSize: 15,
-    color: '#555',
-    lineHeight: 21,
-    marginTop: 10,
+  upcomingBox: {
+    backgroundColor: 'rgba(255, 244, 230, 0.97)',
+    padding: 20,
+  },
+  upcomingTitle: {
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  upcomingDescription: {
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  upcomingPackButton: {
+    width: '30.5%',
+    aspectRatio: 1,
+    backgroundColor: '#fffaf2',
+    borderWidth: 1,
+    borderColor: '#ead8ca',
+    borderBottomWidth: 5,
+    borderBottomColor: '#d8c8bb',
+    borderRadius: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.16,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  upcomingPackButtonText: {
+    color: '#2b2d42',
+    fontSize: 13,
+    fontWeight: '900',
+    lineHeight: 17,
+    textAlign: 'center',
   },
   titleLogo: {
     width: 54,

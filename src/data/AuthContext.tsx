@@ -10,12 +10,19 @@ type SignupData = {
     password: string;
 };
 
+type UpdateProfileData = {
+    name: string;
+    email: string;
+    password?: string;
+};
+
 type AuthContextValue = {
     users: AppUser[];
     currentUser: AppUser | null;
     isAuthenticated: boolean;
     login: (email: string, password: string) => boolean;
     signup: (data: SignupData) => boolean;
+    updateProfile: (data: UpdateProfileData) => boolean;
     logout: () => void;
 };
 
@@ -137,6 +144,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return true;
     };
 
+    const updateProfile = ({
+        name,
+        email,
+        password,
+    }: UpdateProfileData): boolean => {
+        if (!currentUser) return false;
+
+        const normalizedName = name.trim();
+        const normalizedEmail = email.trim().toLowerCase();
+        const normalizedPassword = password?.trim();
+
+        if (!normalizedName || !normalizedEmail) {
+            Alert.alert('Error', 'Completá nombre y email.');
+            return false;
+        }
+
+        if (!normalizedEmail.includes('@')) {
+            Alert.alert('Error', 'Ingresá un email válido.');
+            return false;
+        }
+
+        if (normalizedPassword && normalizedPassword.length < 6) {
+            Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
+            return false;
+        }
+
+        const emailAlreadyExists = users.some(
+            (user) =>
+                user.id !== currentUser.id &&
+                user.email.toLowerCase() === normalizedEmail
+        );
+
+        if (emailAlreadyExists) {
+            Alert.alert('Error', 'Ya existe un usuario con ese email.');
+            return false;
+        }
+
+        const updatedUser: AppUser = {
+            ...currentUser,
+            name: normalizedName,
+            email: normalizedEmail,
+            password: normalizedPassword || currentUser.password,
+        };
+
+        setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+                user.id === currentUser.id ? updatedUser : user
+            )
+        );
+        setCurrentUser(updatedUser);
+
+        Alert.alert('Perfil actualizado', 'Tus datos se guardaron correctamente.');
+        return true;
+    };
+
     const logout = () => {
         setCurrentUser(null);
     };
@@ -148,6 +210,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             isAuthenticated: currentUser !== null,
             login,
             signup,
+            updateProfile,
             logout,
         }),
         [users, currentUser]
