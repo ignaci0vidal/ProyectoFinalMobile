@@ -60,7 +60,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Colocar la harina sobre la mesada y formar una corona.\n2- Agregar los huevos, el aceite de oliva y la sal en el centro.\n3- Integrar los ingredientes desde el centro hacia afuera.\n4- Amasar hasta obtener una masa lisa y firme.\n5- Envolver y dejar descansar.\n6- Estirar con palote o máquina.\n7- Cortar según el formato deseado.',
     cookingTime: 35,
-    imageSource: require('../assets/recipes/pastas.jpg'),
+    imageSource: require('../assets/recipes/pastas.png'),
   },
   {
     templateId: 'ensalada-caesar',
@@ -138,7 +138,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Asar la calabaza hasta que quede tierna y seca.\n2- Hacer un puré y dejarlo enfriar.\n3- Mezclar con ricota, muzzarella, queso rallado, sal, pimienta y nuez moscada.\n4- Estirar la masa de pasta fresca.\n5- Colocar el relleno en porciones y cerrar los sorrentinos.\n6- Cocinar en agua hirviendo con sal hasta que suban a la superficie.',
     cookingTime: 60,
-    imageSource: require('../assets/recipes/sorrentinos.jpg'),
+    imageSource: require('../assets/recipes/sorrentinos.png'),
   },
   {
     templateId: 'tarta-acelga',
@@ -151,7 +151,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Saltear la cebolla picada con aceite de oliva.\n2- Agregar la acelga cocida, bien escurrida y picada.\n3- Mezclar con ricota, huevos y queso rallado.\n4- Condimentar con sal y pimienta.\n5- Forrar una tartera con la masa.\n6- Rellenar y cocinar en horno medio hasta dorar.',
     cookingTime: 45,
-    imageSource: require('../assets/recipes/tarta.jpg'),
+    imageSource: require('../assets/recipes/tarta.png'),
   },
   {
     templateId: 'pastel-papa',
@@ -164,7 +164,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Hervir las papas y preparar un puré con leche, manteca y sal.\n2- Saltear cebolla y morrón picados.\n3- Agregar la carne picada y cocinar hasta dorar.\n4- Condimentar con sal, pimienta y pimentón.\n5- Incorporar huevo duro picado.\n6- Colocar la carne en una fuente y cubrir con puré.\n7- Espolvorear queso rallado y gratinar.',
     cookingTime: 70,
-    imageSource: require('../assets/recipes/pastelpapa.jpg'),
+    imageSource: require('../assets/recipes/pastelpapa.png'),
   },
   {
     templateId: 'hummus-clasico',
@@ -177,7 +177,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Procesar los garbanzos cocidos con tahini, ajo, jugo de limón y sal.\n2- Agregar aceite de oliva en forma de hilo.\n3- Ajustar la textura con agua fría.\n4- Condimentar con comino.\n5- Servir con aceite de oliva y pimentón por encima.',
     cookingTime: 15,
-    imageSource: require('../assets/recipes/hummus.jpg'),
+    imageSource: require('../assets/recipes/hummus.png'),
   },
   {
     templateId: 'sopa-tomate',
@@ -190,7 +190,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Cortar los tomates y la cebolla en trozos.\n2- Saltear cebolla y ajo con aceite de oliva.\n3- Agregar los tomates y cocinar hasta que suelten jugo.\n4- Incorporar caldo y cocinar a fuego medio.\n5- Procesar hasta obtener una crema lisa.\n6- Terminar con crema de leche y albahaca fresca.',
     cookingTime: 40,
-    imageSource: require('../assets/recipes/sopatomate.jpg'),
+    imageSource: require('../assets/recipes/sopatomate.png'),
   },
   {
     templateId: 'budin-pan-jengibre',
@@ -203,7 +203,7 @@ const recipeTemplates: RecipeTemplate[] = [
     steps:
       '1- Remojar el pan en leche hasta que se ablande.\n2- Procesar o desmenuzar la mezcla.\n3- Agregar huevos, azúcar, vainilla, jengibre y ralladura de naranja.\n4- Acaramelar un molde.\n5- Volcar la preparación.\n6- Cocinar a baño María hasta que esté firme.\n7- Enfriar antes de desmoldar.',
     cookingTime: 80,
-    imageSource: require('../assets/recipes/budinpan.jpg'),
+    imageSource: require('../assets/recipes/budinpan.png'),
   },
 ];
 

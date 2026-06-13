@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
         borderColor: '#f0dfd2',
     },
     logo: {
-        width: 345,
+        width: '100%',
+        maxWidth: 345,
         height: 217,
         resizeMode: 'contain',
         alignSelf: 'center',

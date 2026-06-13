@@ -1,9 +1,11 @@
-import { Picker } from '@react-native-picker/picker';
 import * as Haptics from 'expo-haptics';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Alert,
     Image,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    Platform,
     SafeAreaView,
     ScrollView,
     StyleSheet,
@@ -17,6 +19,106 @@ import { useAudioPlayer } from 'expo-audio';
 
 
 const timerFinishedSound = require('../assets/sounds/timer-finished.mp3');
+const minuteOptions = Array.from({ length: 121 }, (_, index) => index);
+const secondOptions = Array.from({ length: 60 }, (_, index) => index);
+
+const notifySuccess = async () => {
+    if (Platform.OS === 'web') return;
+
+    try {
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (error) {
+        console.log('Haptics no disponible:', error);
+    }
+};
+
+const notifyImpact = async (style: Haptics.ImpactFeedbackStyle) => {
+    if (Platform.OS === 'web') return;
+
+    try {
+        await Haptics.impactAsync(style);
+    } catch (error) {
+        console.log('Haptics no disponible:', error);
+    }
+};
+
+type WheelPickerProps = {
+    value: number;
+    options: number[];
+    suffix: string;
+    disabled: boolean;
+    onChange: (value: number) => void;
+};
+
+const WheelPicker: React.FC<WheelPickerProps> = ({
+    value,
+    options,
+    suffix,
+    disabled,
+    onChange,
+}) => {
+    const selectedIndex = options.indexOf(value);
+    const scrollRef = useRef<ScrollView>(null);
+
+    const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const nextIndex = Math.round(event.nativeEvent.contentOffset.y / 42);
+        const nextValue = options[Math.min(Math.max(nextIndex, 0), options.length - 1)];
+
+        if (nextValue !== value) {
+            onChange(nextValue);
+        }
+    };
+
+    useEffect(() => {
+        if (selectedIndex < 0) return;
+
+        scrollRef.current?.scrollTo({
+            y: selectedIndex * 42,
+            animated: false,
+        });
+    }, [selectedIndex]);
+
+    return (
+        <View style={[styles.pickerWrapper, disabled && styles.pickerWrapperDisabled]}>
+            <View pointerEvents="none" style={styles.pickerSelection} />
+
+            <ScrollView
+                ref={scrollRef}
+                showsVerticalScrollIndicator={false}
+                snapToInterval={42}
+                decelerationRate="fast"
+                scrollEnabled={!disabled}
+                contentContainerStyle={styles.wheelContent}
+                onMomentumScrollEnd={handleScrollEnd}
+                onScrollEndDrag={handleScrollEnd}
+            >
+                {options.map((option) => {
+                    const isSelected = option === value;
+
+                    return (
+                        <TouchableOpacity
+                            key={option}
+                            activeOpacity={0.75}
+                            disabled={disabled}
+                            onPress={() => onChange(option)}
+                            style={styles.wheelOption}
+                        >
+                            <Text
+                                style={[
+                                    styles.wheelOptionText,
+                                    isSelected && styles.wheelOptionTextSelected,
+                                    disabled && styles.wheelOptionTextDisabled,
+                                ]}
+                            >
+                                {option} {suffix}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </ScrollView>
+        </View>
+    );
+};
 
 const TimerScreen: React.FC = () => {
     const [selectedMinutes, setSelectedMinutes] = useState<number>(0);
@@ -50,7 +152,7 @@ const TimerScreen: React.FC = () => {
             player.seekTo(0);
             player.play();
 
-            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            await notifySuccess();
 
             Alert.alert('Timer finalizado', 'La cocción terminó.');
 
@@ -85,7 +187,7 @@ const TimerScreen: React.FC = () => {
         setSecondsLeft(totalSeconds);
         setIsRunning(true);
 
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        await notifyImpact(Haptics.ImpactFeedbackStyle.Light);
     };
 
     const stopTimer = async () => {
@@ -93,7 +195,7 @@ const TimerScreen: React.FC = () => {
         setIsRunning(false);
         setSecondsLeft(0);
 
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        await notifyImpact(Haptics.ImpactFeedbackStyle.Medium);
     };
 
     const resetTimer = async () => {
@@ -103,7 +205,7 @@ const TimerScreen: React.FC = () => {
         setSelectedMinutes(0);
         setSelectedSeconds(10);
 
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        await notifyImpact(Haptics.ImpactFeedbackStyle.Light);
     };
 
     return (
@@ -134,49 +236,36 @@ const TimerScreen: React.FC = () => {
                             <View style={styles.pickerBox}>
                                 <Text style={styles.label}>Minutos</Text>
 
-                                <View style={styles.pickerWrapper}>
-                                    <Picker
-                                        selectedValue={selectedMinutes}
-                                        onValueChange={(value) => setSelectedMinutes(Number(value))}
-                                        enabled={!isRunning}
-                                        style={styles.picker}
-                                        itemStyle={styles.pickerItem}
-                                    >
-                                        {Array.from({ length: 121 }, (_, index) => (
-                                            <Picker.Item
-                                                key={index}
-                                                label={`${index} min`}
-                                                value={index}
-                                            />
-                                        ))}
-                                    </Picker>
-                                </View>
+                                <WheelPicker
+                                    value={selectedMinutes}
+                                    options={minuteOptions}
+                                    suffix="min"
+                                    disabled={isRunning}
+                                    onChange={setSelectedMinutes}
+                                />
                             </View>
 
                             <View style={styles.pickerBox}>
                                 <Text style={styles.label}>Segundos</Text>
 
-                                <View style={styles.pickerWrapper}>
-                                    <Picker
-                                        selectedValue={selectedSeconds}
-                                        onValueChange={(value) => setSelectedSeconds(Number(value))}
-                                        enabled={!isRunning}
-                                        style={styles.picker}
-                                        itemStyle={styles.pickerItem}
-                                    >
-                                        {Array.from({ length: 60 }, (_, index) => (
-                                            <Picker.Item
-                                                key={index}
-                                                label={`${index} seg`}
-                                                value={index}
-                                            />
-                                        ))}
-                                    </Picker>
-                                </View>
+                                <WheelPicker
+                                    value={selectedSeconds}
+                                    options={secondOptions}
+                                    suffix="seg"
+                                    disabled={isRunning}
+                                    onChange={setSelectedSeconds}
+                                />
                             </View>
                         </View>
 
-                        <Text style={styles.timer}>{formatTime(displayedSeconds)}</Text>
+                        <Text
+                            adjustsFontSizeToFit
+                            minimumFontScale={0.7}
+                            numberOfLines={1}
+                            style={styles.timer}
+                        >
+                            {formatTime(displayedSeconds)}
+                        </Text>
 
                         {!isRunning ? (
                             <TouchableOpacity style={styles.primaryButton} onPress={startTimer}>
@@ -244,23 +333,46 @@ const styles = StyleSheet.create({
         borderColor: '#000000',
         borderRadius: 18,
         overflow: 'hidden',
-        height: 100,
+        height: 126,
         justifyContent: 'center',
-
     },
-    picker: {
-        height: 190,
-        width: '100%',
-        marginTop: -10,
-        marginBottom: 10,
+    pickerWrapperDisabled: {
+        opacity: 0.58,
     },
-    pickerItem: {
-        fontSize: 22,
+    pickerSelection: {
+        position: 'absolute',
+        left: 8,
+        right: 8,
+        top: 42,
+        height: 42,
+        borderRadius: 12,
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#f0dfd2',
+    },
+    wheelContent: {
+        paddingVertical: 42,
+    },
+    wheelOption: {
+        height: 42,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    wheelOptionText: {
+        fontSize: 18,
         fontWeight: '700',
+        color: '#8a7f76',
+    },
+    wheelOptionTextSelected: {
+        fontSize: 22,
+        fontWeight: '900',
         color: '#2b2d42',
     },
+    wheelOptionTextDisabled: {
+        color: '#8d8d8d',
+    },
     timer: {
-        fontSize: 90,
+        fontSize: 76,
         fontWeight: '900',
         color: '#e76f51',
         textAlign: 'center',
