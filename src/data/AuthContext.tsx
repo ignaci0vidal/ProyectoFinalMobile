@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { initialUsers } from './initialUsers';
 import { AppUser } from '../types/user';
@@ -20,11 +21,61 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+const STORAGE_VERSION = 'v1';
+const USERS_STORAGE_KEY = `@proyecto_final_mobile_users_${STORAGE_VERSION}`;
+
+const mergeStoredUsers = (storedUsers: AppUser[]) => {
+    const usersByEmail = new Map<string, AppUser>();
+
+    initialUsers.forEach((user) => {
+        usersByEmail.set(user.email.toLowerCase(), user);
+    });
+
+    storedUsers.forEach((user) => {
+        usersByEmail.set(user.email.toLowerCase(), user);
+    });
+
+    return Array.from(usersByEmail.values());
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
     const [users, setUsers] = useState<AppUser[]>(initialUsers);
     const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
+    const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
+
+    useEffect(() => {
+        const loadUsersFromStorage = async () => {
+            try {
+                const storedUsers = await AsyncStorage.getItem(USERS_STORAGE_KEY);
+
+                if (storedUsers) {
+                    setUsers(mergeStoredUsers(JSON.parse(storedUsers)));
+                }
+            } catch (error) {
+                console.log('Error al cargar usuarios desde AsyncStorage:', error);
+            } finally {
+                setHasLoadedStorage(true);
+            }
+        };
+
+        loadUsersFromStorage();
+    }, []);
+
+    useEffect(() => {
+        if (!hasLoadedStorage) return;
+
+        const saveUsersInStorage = async () => {
+            try {
+                await AsyncStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+            } catch (error) {
+                console.log('Error al guardar usuarios en AsyncStorage:', error);
+            }
+        };
+
+        saveUsersInStorage();
+    }, [users, hasLoadedStorage]);
 
     const login = (email: string, password: string): boolean => {
         const normalizedEmail = email.trim().toLowerCase();

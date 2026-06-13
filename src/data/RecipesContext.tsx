@@ -52,11 +52,30 @@ const getSeededUserIds = () => {
   return Array.from(new Set(initialRecipes.map((recipe) => recipe.userId)));
 };
 
+const getRecipesWithCurrentLocalImages = (recipes: Recipe[]) => {
+  const imageSourceByTitle = new Map(
+    initialRecipes.map((recipe) => [recipe.title.toLowerCase(), recipe.imageSource])
+  );
+
+  return recipes.map((recipe) => {
+    if (recipe.imageUri) return recipe;
+
+    const currentImageSource = imageSourceByTitle.get(recipe.title.toLowerCase());
+
+    if (!currentImageSource) return recipe;
+
+    return {
+      ...recipe,
+      imageSource: currentImageSource,
+    };
+  });
+};
+
 const notifySuccess = async () => {
   if (Platform.OS === 'web') return;
 
   try {
-    await notifySuccess();
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   } catch (error) {
     console.log('Haptics no disponible:', error);
   }
@@ -66,7 +85,7 @@ const notifyWarning = async () => {
   if (Platform.OS === 'web') return;
 
   try {
-    await notifySuccess();
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
   } catch (error) {
     console.log('Haptics no disponible:', error);
   }
@@ -99,7 +118,7 @@ export const RecipesProvider: React.FC<Props> = ({ children }) => {
         ]);
 
         if (storedRecipes) {
-          setAllRecipes(JSON.parse(storedRecipes));
+          setAllRecipes(getRecipesWithCurrentLocalImages(JSON.parse(storedRecipes)));
         } else {
           setAllRecipes(initialRecipes);
         }
@@ -191,7 +210,7 @@ export const RecipesProvider: React.FC<Props> = ({ children }) => {
       )
     );
 
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await notifySuccess();
   };
 
   const deleteRecipe = async (recipeId: string) => {

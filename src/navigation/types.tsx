@@ -1,6 +1,8 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 export type RootTabParamList = {
   Inicio: undefined;
-  Recetas: undefined;
+  Recetas: NavigatorScreenParams<RecipeStackParamList> | undefined;
   Timer: undefined;
   Ajustes: undefined;
 };

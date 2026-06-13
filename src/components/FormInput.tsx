@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextInputProps,
   View,
 } from 'react-native';
 
@@ -14,6 +15,7 @@ type Props = {
   placeholder: string;
   multiline?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  onFocus?: TextInputProps['onFocus'];
 };
 
 const FormInput: React.FC<Props> = ({
@@ -23,6 +25,7 @@ const FormInput: React.FC<Props> = ({
   placeholder,
   multiline = false,
   keyboardType = 'default',
+  onFocus,
 }) => {
   return (
     <View style={styles.inputGroup}>
@@ -35,6 +38,7 @@ const FormInput: React.FC<Props> = ({
         placeholder={placeholder}
         multiline={multiline}
         keyboardType={keyboardType}
+        onFocus={onFocus}
       />
     </View>
   );

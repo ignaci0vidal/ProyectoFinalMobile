@@ -7,13 +7,17 @@ import {
   Text,
   View,
 } from 'react-native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useRecipes } from '../data/RecipesContext';
+import { RootTabParamList } from '../navigation/types';
+
+type HomeNavigation = BottomTabNavigationProp<RootTabParamList>;
 
 const HomeScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<HomeNavigation>();
   const { recipes } = useRecipes();
 
   const totalRecipes = recipes.length;

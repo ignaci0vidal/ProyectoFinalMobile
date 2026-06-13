@@ -1,9 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Alert,
   Image,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -53,6 +55,7 @@ const parseIngredientsToItems = (ingredients?: string): IngredientItem[] => {
 const RecipeFormScreen: React.FC<Props> = (props) => {
   const { navigation, mode } = props;
   const { recipes, addRecipe, updateRecipe } = useRecipes();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const isEditing = mode === 'edit';
   const recipeId =
@@ -232,134 +235,151 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
     }
   };
 
+  const handlePreparationFocus = () => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 260);
+  };
+
   return (
     <ItalianTableclothBackground>
       <SafeAreaView style={styles.screen}>
-        <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>
-            {isEditing ? 'Editar receta' : 'Nueva receta'}
-          </Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+          style={styles.keyboardAvoidingView}
+        >
+          <ScrollView
+            ref={scrollViewRef}
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps="handled"
+          >
+            <Text style={styles.title}>
+              {isEditing ? 'Editar receta' : 'Nueva receta'}
+            </Text>
 
-          <Text style={styles.helperText}>
-            Cargá los datos completos de la receta. Los ingredientes se cargan
-            de a uno, separando nombre y cantidad.
-          </Text>
-
-          <FormInput
-            label="Título"
-            value={title}
-            onChangeText={setTitle}
-            placeholder="Ej: Budín de pan"
-          />
-
-          <FormInput
-            label="Categoría"
-            value={category}
-            onChangeText={setCategory}
-            placeholder="Ej: Postres, Pastas, Carnes"
-          />
-
-          <FormInput
-            label="Descripción"
-            value={description}
-            onChangeText={setDescription}
-            placeholder="Ej: Receta cremosa, simple y rendidora."
-            multiline
-          />
-
-          <FormInput
-            label="Tiempo de cocción en minutos"
-            value={cookingTime}
-            onChangeText={setCookingTime}
-            placeholder="Ej: 45"
-            keyboardType="numeric"
-          />
-
-          <View style={styles.imageBox}>
-            <Text style={styles.imageLabel}>Foto de la receta</Text>
-
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={styles.previewImage} />
-            ) : (
-              <View style={styles.imagePlaceholder}>
-                <Text style={styles.imagePlaceholderText}>
-                  Sin foto seleccionada
-                </Text>
-              </View>
-            )}
-
-            <View style={styles.imageActions}>
-              <PrimaryButton label="Elegir de galería" onPress={handlePickImage} />
-              <PrimaryButton label="Usar cámara" onPress={handleTakePhoto} />
-            </View>
-          </View>
-
-          <View style={styles.ingredientsBox}>
-            <Text style={styles.ingredientsTitle}>Ingredientes</Text>
+            <Text style={styles.helperText}>
+              Cargá los datos completos de la receta. Los ingredientes se cargan
+              de a uno, separando nombre y cantidad.
+            </Text>
 
             <FormInput
-              label="Ingrediente"
-              value={ingredientName}
-              onChangeText={setIngredientName}
-              placeholder="Ej: Harina"
+              label="Título"
+              value={title}
+              onChangeText={setTitle}
+              placeholder="Ej: Budín de pan"
             />
 
             <FormInput
-              label="Cantidad"
-              value={ingredientAmount}
-              onChangeText={setIngredientAmount}
-              placeholder="Ej: 500 g"
+              label="Categoría"
+              value={category}
+              onChangeText={setCategory}
+              placeholder="Ej: Postres, Pastas, Carnes"
+            />
+
+            <FormInput
+              label="Descripción"
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Ej: Receta cremosa, simple y rendidora."
+              multiline
+            />
+
+            <FormInput
+              label="Tiempo de cocción en minutos"
+              value={cookingTime}
+              onChangeText={setCookingTime}
+              placeholder="Ej: 45"
+              keyboardType="numeric"
+            />
+
+            <View style={styles.imageBox}>
+              <Text style={styles.imageLabel}>Foto de la receta</Text>
+
+              {imageUri ? (
+                <Image source={{ uri: imageUri }} style={styles.previewImage} />
+              ) : (
+                <View style={styles.imagePlaceholder}>
+                  <Text style={styles.imagePlaceholderText}>
+                    Sin foto seleccionada
+                  </Text>
+                </View>
+              )}
+
+              <View style={styles.imageActions}>
+                <PrimaryButton label="Elegir de galería" onPress={handlePickImage} />
+                <PrimaryButton label="Usar cámara" onPress={handleTakePhoto} />
+              </View>
+            </View>
+
+            <View style={styles.ingredientsBox}>
+              <Text style={styles.ingredientsTitle}>Ingredientes</Text>
+
+              <FormInput
+                label="Ingrediente"
+                value={ingredientName}
+                onChangeText={setIngredientName}
+                placeholder="Ej: Harina"
+              />
+
+              <FormInput
+                label="Cantidad"
+                value={ingredientAmount}
+                onChangeText={setIngredientAmount}
+                placeholder="Ej: 500 g"
+              />
+
+              <PrimaryButton
+                label="Agregar ingrediente"
+                onPress={handleAddIngredient}
+              />
+
+              <View style={styles.ingredientsList}>
+                {ingredientItems.length === 0 ? (
+                  <Text style={styles.emptyIngredientsText}>
+                    Todavía no agregaste ingredientes.
+                  </Text>
+                ) : (
+                  ingredientItems.map((ingredient) => (
+                    <View key={ingredient.id} style={styles.ingredientItem}>
+                      <View style={styles.ingredientItemTextBox}>
+                        <Text style={styles.ingredientItemName}>
+                          {ingredient.name}
+                        </Text>
+                        <Text style={styles.ingredientItemAmount}>
+                          {ingredient.amount}
+                        </Text>
+                      </View>
+
+                      <Text
+                        style={styles.removeIngredientButton}
+                        onPress={() => handleRemoveIngredient(ingredient.id)}
+                      >
+                        Quitar
+                      </Text>
+                    </View>
+                  ))
+                )}
+              </View>
+            </View>
+
+            <FormInput
+              label="Preparación"
+              value={steps}
+              onChangeText={setSteps}
+              placeholder={
+                'Ej:\n1. Mezclar los ingredientes.\n2. Amasar.\n3. Cocinar hasta dorar.'
+              }
+              multiline
+              onFocus={handlePreparationFocus}
             />
 
             <PrimaryButton
-              label="Agregar ingrediente"
-              onPress={handleAddIngredient}
+              label={isEditing ? 'Guardar cambios' : 'Guardar receta'}
+              onPress={handleSave}
             />
-
-            <View style={styles.ingredientsList}>
-              {ingredientItems.length === 0 ? (
-                <Text style={styles.emptyIngredientsText}>
-                  Todavía no agregaste ingredientes.
-                </Text>
-              ) : (
-                ingredientItems.map((ingredient) => (
-                  <View key={ingredient.id} style={styles.ingredientItem}>
-                    <View style={styles.ingredientItemTextBox}>
-                      <Text style={styles.ingredientItemName}>
-                        {ingredient.name}
-                      </Text>
-                      <Text style={styles.ingredientItemAmount}>
-                        {ingredient.amount}
-                      </Text>
-                    </View>
-
-                    <Text
-                      style={styles.removeIngredientButton}
-                      onPress={() => handleRemoveIngredient(ingredient.id)}
-                    >
-                      Quitar
-                    </Text>
-                  </View>
-                ))
-              )}
-            </View>
-          </View>
-
-          <FormInput
-            label="Preparación"
-            value={steps}
-            onChangeText={setSteps}
-            placeholder={
-              'Ej:\n1. Mezclar los ingredientes.\n2. Amasar.\n3. Cocinar hasta dorar.'
-            }
-            multiline
-          />
-
-          <PrimaryButton
-            label={isEditing ? 'Guardar cambios' : 'Guardar receta'}
-            onPress={handleSave}
-          />
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </ItalianTableclothBackground>
   );
@@ -370,13 +390,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   content: {
     width: '100%',
     maxWidth: 920,
     alignSelf: 'center',
     paddingHorizontal: 32,
     paddingTop: 32,
-    paddingBottom: 40,
+    paddingBottom: 180,
   },
   title: {
     fontSize: 26,
