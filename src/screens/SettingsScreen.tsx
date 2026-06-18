@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  Animated,
   Image,
   Modal,
   SafeAreaView,
@@ -92,6 +93,34 @@ const SettingsScreen: React.FC = () => {
   const [name, setName] = useState(currentUser?.name ?? '');
   const [email, setEmail] = useState(currentUser?.email ?? '');
   const [password, setPassword] = useState('');
+  const saucesButtonPress = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.delay(900),
+        Animated.timing(saucesButtonPress, {
+          toValue: 1,
+          duration: 120,
+          useNativeDriver: true,
+        }),
+        Animated.timing(saucesButtonPress, {
+          toValue: 0,
+          duration: 180,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    animation.start();
+
+    return () => animation.stop();
+  }, [saucesButtonPress]);
+
+  const saucesButtonTranslateY = saucesButtonPress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 5],
+  });
 
   const handleLogout = () => {
     setShowLogoutModal(true);
@@ -209,10 +238,10 @@ const SettingsScreen: React.FC = () => {
                 <View key={rowIndex} style={styles.upcomingPacksRow}>
                   {packRow.map((packName) => {
                     const isSaucesPack = packName === 'Salsas';
-
-                    return (
+                    const packButton = (
                       <TouchableOpacity
                         key={packName}
+                        activeOpacity={0.78}
                         style={[
                           styles.upcomingPackButton,
                           isSaucesPack && styles.featuredPackButton,
@@ -228,6 +257,30 @@ const SettingsScreen: React.FC = () => {
                           {packName}
                         </Text>
                       </TouchableOpacity>
+                    );
+
+                    if (isSaucesPack) {
+                      return (
+                        <Animated.View
+                          key={packName}
+                          style={[
+                            styles.animatedPackButton,
+                            { transform: [{ translateY: saucesButtonTranslateY }] },
+                          ]}
+                        >
+                          <View style={styles.featuredPackButtonBase} />
+                          {packButton}
+                        </Animated.View>
+                      );
+                    }
+
+                    return (
+                      <View
+                        key={packName}
+                        style={styles.staticPackButtonWrapper}
+                      >
+                        {packButton}
+                      </View>
                     );
                   })}
                 </View>
@@ -585,6 +638,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 12,
   },
+  staticPackButtonWrapper: {
+    width: '30%',
+    aspectRatio: 1,
+  },
+  animatedPackButton: {
+    width: '30%',
+    aspectRatio: 1,
+    position: 'relative',
+  },
+  featuredPackButtonBase: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -5,
+    height: 18,
+    borderRadius: 16,
+    backgroundColor: '#a94732',
+    opacity: 0.38,
+  },
   upcomingBox: {
     backgroundColor: 'rgba(255, 244, 230, 0.97)',
     padding: 20,
@@ -598,7 +670,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   upcomingPackButton: {
-    width: '30%',
+    width: '100%',
     aspectRatio: 1,
     backgroundColor: '#fffaf2',
     borderWidth: 1,
