@@ -8,7 +8,7 @@ export type RootTabParamList = {
 };
 
 export type RecipeStackParamList = {
-  RecipeList: undefined;
+  RecipeList: { category?: string } | undefined;
   RecipeDetail: { recipeId: string };
   RecipeEdit: { recipeId: string };
   RecipeCreate: undefined;

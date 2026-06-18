@@ -198,21 +198,6 @@ const SettingsScreen: React.FC = () => {
             </View>
           )}
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Acerca de miKitchen</Text>
-            <Text style={styles.infoText}>
-              miKitchen guarda recetas propias, fotos, favoritos y datos de usuario
-              de forma local en este dispositivo.
-            </Text>
-          </View>
-
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Elementos nativos incluidos</Text>
-            <Text style={styles.infoText}>• Cámara o galería para foto de receta</Text>
-            <Text style={styles.infoText}>• Feedback háptico al guardar acciones</Text>
-            <Text style={styles.infoText}>• Timer de cocción con alerta</Text>
-          </View>
-
           <View style={[styles.infoBox, styles.upcomingBox]}>
             <Text style={[styles.infoTitle, styles.upcomingTitle]}>Próximamente</Text>
             <Text style={[styles.infoText, styles.upcomingDescription]}>
@@ -359,10 +344,10 @@ const SettingsScreen: React.FC = () => {
               </Text>
 
               <TouchableOpacity
-                style={styles.confirmButton}
+                style={styles.packConfirmButton}
                 onPress={() => setShowPackAddedModal(false)}
               >
-                <Text style={styles.confirmButtonText}>Aceptar</Text>
+                <Text style={styles.packConfirmButtonText}>Aceptar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -510,6 +495,20 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 15,
     fontWeight: '900',
+  },
+  packConfirmButton: {
+    width: '100%',
+    backgroundColor: '#e76f51',
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  packConfirmButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '900',
+    textAlign: 'center',
   },
   headerCard: {
     backgroundColor: 'rgba(255, 250, 242, 0.94)',
