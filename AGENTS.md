@@ -50,6 +50,7 @@ Notas para trabajar en este proyecto con agentes de codigo.
   - El usuario puede cambiar nombre, email y opcionalmente contraseña.
   - `AuthContext` expone `updateProfile` y persiste los cambios en AsyncStorage.
   - Se agrego una card "Proximamente" con chips para packs tematicos.
+  - El pack "Salsas" quedo destacado y agrega 4 recetas al recetario desde un modal de confirmacion.
 
 ## Validacion
 

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useAuth } from '../data/AuthContext';
+import { useRecipes } from '../data/RecipesContext';
 
 const upcomingRecipePacks = [
   'Recetas sin TACC',
@@ -24,10 +25,70 @@ const upcomingRecipePacks = [
   'Comida thai',
 ];
 
+const saucePackRecipes = [
+  {
+    title: 'Salsa bechamel',
+    category: 'Salsas',
+    description:
+      'Salsa blanca clásica a base de roux, leche y nuez moscada. Ideal para gratinados, pastas y verduras.',
+    ingredients:
+      'Manteca: 50 g\nHarina 0000: 50 g\nLeche: 500 ml\nSal fina: a gusto\nPimienta blanca: a gusto\nNuez moscada: a gusto',
+    steps:
+      '1- Derretir la manteca en una cacerola a fuego bajo.\n2- Agregar la harina y cocinar mezclando durante 2 minutos, sin que tome color.\n3- Incorporar la leche de a poco, batiendo para evitar grumos.\n4- Cocinar hasta que espese y tenga textura lisa.\n5- Condimentar con sal, pimienta blanca y nuez moscada.',
+    cookingTime: 15,
+    isFavorite: false,
+  },
+  {
+    title: 'Salsa bolognesa',
+    category: 'Salsas',
+    description:
+      'Salsa de carne cocida lentamente con vegetales, tomate y vino. Perfecta para pastas rellenas o largas.',
+    ingredients:
+      'Carne picada: 500 g\nCebolla: 1 u\nZanahoria: 1 u\nApio: 1 rama\nAjo: 1 diente\nTomate triturado: 500 ml\nVino tinto: 100 ml\nAceite de oliva: a gusto\nSal fina: a gusto\nPimienta: a gusto',
+    steps:
+      '1- Picar cebolla, zanahoria, apio y ajo bien pequeños.\n2- Rehogar los vegetales con aceite de oliva hasta que estén tiernos.\n3- Agregar la carne picada y dorar mezclando.\n4- Incorporar el vino y dejar evaporar el alcohol.\n5- Sumar el tomate triturado y cocinar a fuego bajo hasta concentrar.\n6- Ajustar sal y pimienta antes de servir.',
+    cookingTime: 70,
+    isFavorite: false,
+  },
+  {
+    title: 'Pesto genovés',
+    category: 'Salsas',
+    description:
+      'Salsa fresca de albahaca, ajo, queso, frutos secos y aceite de oliva. Rápida, aromática y versátil.',
+    ingredients:
+      'Albahaca fresca: 2 tazas\nAjo: 1 diente\nPiñones o nueces: 40 g\nQueso parmesano rallado: 60 g\nAceite de oliva: 120 ml\nSal fina: a gusto',
+    steps:
+      '1- Lavar y secar muy bien las hojas de albahaca.\n2- Procesar o machacar albahaca, ajo, frutos secos y sal.\n3- Agregar el queso rallado.\n4- Incorporar el aceite de oliva de a poco hasta obtener una salsa cremosa.\n5- Ajustar sal y usar sin calentar para conservar el color y aroma.',
+    cookingTime: 10,
+    isFavorite: false,
+  },
+  {
+    title: 'Salsa holandesa',
+    category: 'Salsas',
+    description:
+      'Emulsión tibia de yemas, manteca y limón. Clásica para huevos, pescados, vegetales y preparaciones delicadas.',
+    ingredients:
+      'Yemas: 3 u\nManteca clarificada o derretida: 180 g\nJugo de limón: 1 cda\nAgua: 1 cda\nSal fina: a gusto\nPimienta blanca: a gusto',
+    steps:
+      '1- Colocar las yemas con agua en un bowl resistente al calor.\n2- Batir sobre baño María suave hasta que espumen y espesen.\n3- Agregar la manteca tibia en forma de hilo, batiendo constantemente.\n4- Retirar del calor y sumar jugo de limón.\n5- Condimentar con sal y pimienta blanca. Mantener tibia, sin hervir.',
+    cookingTime: 15,
+    isFavorite: false,
+  },
+];
+
+const upcomingRecipePackRows = [
+  upcomingRecipePacks.slice(0, 3),
+  upcomingRecipePacks.slice(3, 6),
+  upcomingRecipePacks.slice(6),
+];
+
 const SettingsScreen: React.FC = () => {
   const { currentUser, logout, updateProfile } = useAuth();
+  const { recipes, addRecipe } = useRecipes();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPackAddedModal, setShowPackAddedModal] = useState(false);
+  const [addedSauceRecipesCount, setAddedSauceRecipesCount] = useState(0);
   const [name, setName] = useState(currentUser?.name ?? '');
   const [email, setEmail] = useState(currentUser?.email ?? '');
   const [password, setPassword] = useState('');
@@ -36,7 +97,24 @@ const SettingsScreen: React.FC = () => {
     setShowLogoutModal(true);
   };
 
-  const handleUpcomingPackPress = (packName: string) => {
+  const handleUpcomingPackPress = async (packName: string) => {
+    if (packName === 'Salsas') {
+      const existingRecipeTitles = new Set(
+        recipes.map((recipe) => recipe.title.trim().toLowerCase())
+      );
+      const recipesToAdd = saucePackRecipes.filter(
+        (recipe) => !existingRecipeTitles.has(recipe.title.toLowerCase())
+      );
+
+      for (const recipe of recipesToAdd) {
+        await addRecipe(recipe);
+      }
+
+      setAddedSauceRecipesCount(recipesToAdd.length);
+      setShowPackAddedModal(true);
+      return;
+    }
+
     Alert.alert('Próximamente', `${packName} estará disponible en una próxima versión.`);
   };
 
@@ -142,14 +220,32 @@ const SettingsScreen: React.FC = () => {
             </Text>
 
             <View style={styles.upcomingPacksGrid}>
-              {upcomingRecipePacks.map((packName) => (
-                <TouchableOpacity
-                  key={packName}
-                  style={styles.upcomingPackButton}
-                  onPress={() => handleUpcomingPackPress(packName)}
-                >
-                  <Text style={styles.upcomingPackButtonText}>{packName}</Text>
-                </TouchableOpacity>
+              {upcomingRecipePackRows.map((packRow, rowIndex) => (
+                <View key={rowIndex} style={styles.upcomingPacksRow}>
+                  {packRow.map((packName) => {
+                    const isSaucesPack = packName === 'Salsas';
+
+                    return (
+                      <TouchableOpacity
+                        key={packName}
+                        style={[
+                          styles.upcomingPackButton,
+                          isSaucesPack && styles.featuredPackButton,
+                        ]}
+                        onPress={() => handleUpcomingPackPress(packName)}
+                      >
+                        <Text
+                          style={[
+                            styles.upcomingPackButtonText,
+                            isSaucesPack && styles.featuredPackButtonText,
+                          ]}
+                        >
+                          {packName}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
               ))}
             </View>
           </View>
@@ -243,6 +339,31 @@ const SettingsScreen: React.FC = () => {
                   <Text style={styles.confirmButtonText}>Cerrar sesión</Text>
                 </TouchableOpacity>
               </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          visible={showPackAddedModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowPackAddedModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Pack agregado con éxito</Text>
+              <Text style={styles.modalText}>
+                {addedSauceRecipesCount > 0
+                  ? `Sumamos ${addedSauceRecipesCount} receta${addedSauceRecipesCount === 1 ? '' : 's'} de salsas a tu recetario.`
+                  : 'Ya tenías todas las recetas de este pack en tu recetario.'}
+              </Text>
+
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => setShowPackAddedModal(false)}
+              >
+                <Text style={styles.confirmButtonText}>Aceptar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -457,11 +578,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   upcomingPacksGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: 14,
+    gap: 14,
     marginTop: 18,
+  },
+  upcomingPacksRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 12,
   },
   upcomingBox: {
     backgroundColor: 'rgba(255, 244, 230, 0.97)',
@@ -476,7 +599,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   upcomingPackButton: {
-    width: '30.5%',
+    width: '30%',
     aspectRatio: 1,
     backgroundColor: '#fffaf2',
     borderWidth: 1,
@@ -503,6 +626,14 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     lineHeight: 17,
     textAlign: 'center',
+  },
+  featuredPackButton: {
+    backgroundColor: '#e76f51',
+    borderColor: '#c94f34',
+    borderBottomColor: '#c94f34',
+  },
+  featuredPackButtonText: {
+    color: '#ffffff',
   },
   titleLogo: {
     width: 54,
