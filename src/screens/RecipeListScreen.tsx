@@ -19,10 +19,11 @@ import { RecipeStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RecipeStackParamList, 'RecipeList'>;
 
-const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
+const RecipeListScreen: React.FC<Props> = ({ navigation, route }) => {
   const { recipes } = useRecipes();
 
   const [searchText, setSearchText] = useState('');
+  const selectedCategory = route.params?.category;
 
   const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite).length;
 
@@ -35,6 +36,12 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
   const normalizedSearchText = normalizeText(searchText.trim());
 
   const filteredRecipes = recipes.filter((recipe) => {
+    const matchesCategory = selectedCategory
+      ? recipe.category === selectedCategory
+      : true;
+
+    if (!matchesCategory) return false;
+
     if (!normalizedSearchText) return true;
 
     const title = normalizeText(recipe.title);
@@ -100,6 +107,21 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
             autoCorrect={false}
             clearButtonMode="while-editing"
           />
+
+          {selectedCategory && (
+            <View style={styles.activeFilterBox}>
+              <Text style={styles.activeFilterText}>
+                Categoría: {selectedCategory}
+              </Text>
+
+              <TouchableOpacity
+                style={styles.clearFilterButton}
+                onPress={() => navigation.setParams({ category: undefined })}
+              >
+                <Text style={styles.clearFilterButtonText}>Ver todas</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
 
         <FlatList
@@ -111,6 +133,8 @@ const RecipeListScreen: React.FC<Props> = ({ navigation }) => {
               message={
                 searchText.trim()
                   ? 'No encontramos recetas con esa búsqueda.'
+                  : selectedCategory
+                    ? 'No hay recetas en esta categoría.'
                   : 'Todavía no hay recetas cargadas.'
               }
             />
@@ -158,6 +182,36 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     color: '#2b2d42',
+  },
+  activeFilterBox: {
+    backgroundColor: '#fff8f0',
+    borderWidth: 1,
+    borderColor: '#f0dfd2',
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  activeFilterText: {
+    flex: 1,
+    color: '#2b2d42',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  clearFilterButton: {
+    backgroundColor: '#e76f51',
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+  },
+  clearFilterButtonText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '900',
   },
   primaryAction: {
     backgroundColor: '#e76f51',

@@ -11,6 +11,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
+import { useAuth } from '../data/AuthContext';
 import { useRecipes } from '../data/RecipesContext';
 import { RootTabParamList } from '../navigation/types';
 
@@ -18,9 +19,12 @@ type HomeNavigation = BottomTabNavigationProp<RootTabParamList>;
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeNavigation>();
+  const { currentUser } = useAuth();
   const { recipes } = useRecipes();
 
   const totalRecipes = recipes.length;
+  const userName = currentUser?.name ?? 'usuario';
+  const recipeLabel = totalRecipes === 1 ? 'receta cargada' : 'recetas cargadas';
 
   const goToRecipes = () => {
     navigation.navigate('Recetas');
@@ -94,8 +98,14 @@ const HomeScreen: React.FC = () => {
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Resumen</Text>
             <Text style={styles.infoText}>
-              Tenés {totalRecipes} recetas cargadas. Desde esta pantalla podés
-              consultar tu recetario, crear una receta nueva o abrir el timer.
+              Hola <Text style={styles.userName}>{userName}</Text>, tenés {totalRecipes}{' '}
+              {recipeLabel}.
+            </Text>
+
+            <Text style={[styles.infoText, styles.infoTextSecondLine]}>
+              Desde esta pantalla podés:
+              {'\n'} - consultar tu recetario, {'\n'} - crear una receta nueva {'\n'} -
+              abrir el timer.
             </Text>
           </View>
         </View>
@@ -321,6 +331,13 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     resizeMode: 'contain',
+  },
+  userName: {
+    fontWeight: '900',
+    color: '#2b2d42',
+  },
+  infoTextSecondLine: {
+    marginTop: 8,
   },
 });
 
