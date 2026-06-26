@@ -18,6 +18,7 @@ import ItalianTableclothBackground from '../components/ItalianTableclothBackgrou
 import PrimaryButton from '../components/PrimaryButton';
 import { useRecipes } from '../data/RecipesContext';
 import { RecipeStackParamList } from '../navigation/types';
+import { RecipeIngredient } from '../types/recipe';
 
 type Props =
   | (NativeStackScreenProps<RecipeStackParamList, 'RecipeCreate'> & {
@@ -31,25 +32,24 @@ type IngredientItem = {
   id: string;
   name: string;
   amount: string;
+  unit: string;
 };
 
-const parseIngredientsToItems = (ingredients?: string): IngredientItem[] => {
+const parseIngredientsToItems = (
+  ingredients?: RecipeIngredient[]
+): IngredientItem[] => {
   if (!ingredients) {
     return [];
   }
 
   return ingredients
-    .split('\n')
-    .filter((line) => line.trim().length > 0)
-    .map((line, index) => {
-      const [namePart, ...amountParts] = line.split(':');
-
-      return {
-        id: `${Date.now()}-${index}`,
-        name: namePart.trim(),
-        amount: amountParts.join(':').trim(),
-      };
-    });
+    .filter((ingredient) => ingredient.name.trim().length > 0)
+    .map((ingredient, index) => ({
+      id: `${Date.now()}-${index}`,
+      name: ingredient.name,
+      amount: ingredient.amount,
+      unit: ingredient.unit,
+    }));
 };
 
 const RecipeFormScreen: React.FC<Props> = (props) => {
@@ -80,6 +80,7 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
 
   const [ingredientName, setIngredientName] = useState('');
   const [ingredientAmount, setIngredientAmount] = useState('');
+  const [ingredientUnit, setIngredientUnit] = useState('');
   const [ingredientItems, setIngredientItems] = useState<IngredientItem[]>(
     parseIngredientsToItems(recipeToEdit?.ingredients)
   );
@@ -93,6 +94,7 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
     setImageUri(undefined);
     setIngredientName('');
     setIngredientAmount('');
+    setIngredientUnit('');
     setIngredientItems([]);
   };
 
@@ -141,11 +143,13 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
       id: Date.now().toString(),
       name: ingredientName.trim(),
       amount: ingredientAmount.trim(),
+      unit: ingredientUnit.trim(),
     };
 
     setIngredientItems((prev) => [...prev, newIngredient]);
     setIngredientName('');
     setIngredientAmount('');
+    setIngredientUnit('');
   };
 
   const handleRemoveIngredient = (ingredientId: string) => {
@@ -210,15 +214,11 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
       return;
     }
 
-    const formattedIngredients = ingredientItems
-      .map((ingredient) => `${ingredient.name}: ${ingredient.amount}`)
-      .join('\n');
-
     const recipeData = {
       title: title.trim(),
       category: category.trim(),
       description: description.trim(),
-      ingredients: formattedIngredients,
+      ingredients: ingredientItems.map(({ id, ...ingredient }) => ingredient),
       steps: steps.trim(),
       cookingTime: Number(cookingTime),
       imageUri,
@@ -326,7 +326,14 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
                 label="Cantidad"
                 value={ingredientAmount}
                 onChangeText={setIngredientAmount}
-                placeholder="Ej: 500 g"
+                placeholder="Ej: 500"
+              />
+
+              <FormInput
+                label="Unidad"
+                value={ingredientUnit}
+                onChangeText={setIngredientUnit}
+                placeholder="Ej: g, ml, u, a gusto"
               />
 
               <PrimaryButton
@@ -347,7 +354,9 @@ const RecipeFormScreen: React.FC<Props> = (props) => {
                           {ingredient.name}
                         </Text>
                         <Text style={styles.ingredientItemAmount}>
-                          {ingredient.amount}
+                          {[ingredient.amount, ingredient.unit]
+                            .filter((value) => value.trim().length > 0)
+                            .join(' ')}
                         </Text>
                       </View>
 

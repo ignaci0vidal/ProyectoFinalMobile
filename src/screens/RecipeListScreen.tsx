@@ -16,6 +16,7 @@ import ItalianTableclothBackground from '../components/ItalianTableclothBackgrou
 import RecipeCard from '../components/RecipeCard';
 import { useRecipes } from '../data/RecipesContext';
 import { RecipeStackParamList } from '../navigation/types';
+import { getIngredientsSearchText, normalizeText } from '../utils/recipeHelpers';
 
 type Props = NativeStackScreenProps<RecipeStackParamList, 'RecipeList'>;
 
@@ -26,12 +27,6 @@ const RecipeListScreen: React.FC<Props> = ({ navigation, route }) => {
   const selectedCategory = route.params?.category;
 
   const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite).length;
-
-  const normalizeText = (text: string) =>
-    text
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
 
   const normalizedSearchText = normalizeText(searchText.trim());
 
@@ -45,7 +40,7 @@ const RecipeListScreen: React.FC<Props> = ({ navigation, route }) => {
     if (!normalizedSearchText) return true;
 
     const title = normalizeText(recipe.title);
-    const ingredients = normalizeText(recipe.ingredients);
+    const ingredients = normalizeText(getIngredientsSearchText(recipe.ingredients));
 
     return (
       title.includes(normalizedSearchText) ||

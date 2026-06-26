@@ -15,17 +15,9 @@ import {
 import ItalianTableclothBackground from '../components/ItalianTableclothBackground';
 import { useRecipes } from '../data/RecipesContext';
 import { RecipeStackParamList } from '../navigation/types';
+import { formatIngredient } from '../utils/recipeHelpers';
 
 type Props = NativeStackScreenProps<RecipeStackParamList, 'RecipeDetail'>;
-
-const parseIngredientLine = (line: string) => {
-  const [name, ...rest] = line.split(':');
-
-  return {
-    name: name.trim(),
-    amount: rest.join(':').trim(),
-  };
-};
 
 const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { recipes, toggleFavorite, deleteRecipe } = useRecipes();
@@ -50,10 +42,6 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       </ItalianTableclothBackground>
     );
   }
-
-  const ingredientLines = recipe.ingredients
-    .split('\n')
-    .filter((line) => line.trim() !== '');
 
   const handleToggleFavorite = async () => {
     await toggleFavorite(recipe.id);
@@ -139,19 +127,21 @@ const RecipeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <View style={styles.sectionCard}>
             <Text style={styles.sectionTitle}>Ingredientes</Text>
 
-            {ingredientLines.map((line, index) => {
-              const ingredient = parseIngredientLine(line);
+            {recipe.ingredients.map((ingredient, index) => {
+              const amount = [ingredient.amount, ingredient.unit]
+                .filter((value) => value.trim().length > 0)
+                .join(' ');
 
               return (
                 <View
-                  key={`${ingredient.name}-${index}`}
+                  key={`${formatIngredient(ingredient)}-${index}`}
                   style={styles.ingredientRow}
                 >
                   <Text style={styles.ingredientName}>{ingredient.name}</Text>
                   <View style={styles.dottedLine} />
-                  {ingredient.amount !== '' && (
+                  {amount !== '' && (
                     <Text style={styles.ingredientAmount}>
-                      {ingredient.amount}
+                      {amount}
                     </Text>
                   )}
                 </View>

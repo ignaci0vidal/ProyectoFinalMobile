@@ -10,6 +10,7 @@ import React, {
 import { Platform } from 'react-native';
 
 import { Recipe } from '../types/recipe';
+import { parseIngredientsText } from '../utils/recipeHelpers';
 import { useAuth } from './AuthContext';
 import { createStarterRecipesForUser, initialRecipes } from './initialRecipes';
 
@@ -52,12 +53,26 @@ const getSeededUserIds = () => {
   return Array.from(new Set(initialRecipes.map((recipe) => recipe.userId)));
 };
 
-const getRecipesWithCurrentLocalImages = (recipes: Recipe[]) => {
+type StoredRecipe = Omit<Recipe, 'ingredients'> & {
+  ingredients: Recipe['ingredients'] | string;
+};
+
+const normalizeStoredRecipes = (recipes: StoredRecipe[]): Recipe[] => {
+  return recipes.map((recipe) => ({
+    ...recipe,
+    ingredients:
+      typeof recipe.ingredients === 'string'
+        ? parseIngredientsText(recipe.ingredients)
+        : recipe.ingredients,
+  }));
+};
+
+const getRecipesWithCurrentLocalImages = (recipes: StoredRecipe[]) => {
   const imageSourceByTitle = new Map(
     initialRecipes.map((recipe) => [recipe.title.toLowerCase(), recipe.imageSource])
   );
 
-  return recipes.map((recipe) => {
+  return normalizeStoredRecipes(recipes).map((recipe) => {
     if (recipe.imageUri) return recipe;
 
     const currentImageSource = imageSourceByTitle.get(recipe.title.toLowerCase());
