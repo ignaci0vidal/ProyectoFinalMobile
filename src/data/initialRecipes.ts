@@ -1,11 +1,13 @@
 import { Recipe } from '../types/recipe';
+import { parseIngredientsText } from '../utils/recipeHelpers';
 
 const createdAt = new Date().toISOString();
 
 type RecipeTemplate = Omit<
   Recipe,
-  'id' | 'userId' | 'isFavorite' | 'createdAt'
+  'id' | 'userId' | 'ingredients' | 'isFavorite' | 'createdAt'
 > & {
+  ingredients: string;
   templateId: string;
 };
 
@@ -227,6 +229,7 @@ const buildRecipesForUser = (
       id: `${userId}-${currentTemplateId}`,
       userId,
       ...recipeData,
+      ingredients: parseIngredientsText(recipeData.ingredients),
       isFavorite: favoriteTemplateIds.includes(currentTemplateId),
       createdAt,
     };

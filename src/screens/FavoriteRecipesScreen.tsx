@@ -13,13 +13,14 @@ import ItalianTableclothBackground from '../components/ItalianTableclothBackgrou
 import RecipeCard from '../components/RecipeCard';
 import { useRecipes } from '../data/RecipesContext';
 import { RecipeStackParamList } from '../navigation/types';
+import { getFavoriteRecipes } from '../utils/recipeHelpers';
 
 type Props = NativeStackScreenProps<RecipeStackParamList, 'FavoriteRecipes'>;
 
 const FavoriteRecipesScreen: React.FC<Props> = ({ navigation }) => {
     const { recipes } = useRecipes();
 
-    const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite);
+    const favoriteRecipes = getFavoriteRecipes(recipes);
 
     return (
         <ItalianTableclothBackground>
