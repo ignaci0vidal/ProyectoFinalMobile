@@ -4,7 +4,7 @@
 
 Aplicación móvil desarrollada con **Expo**, **React Native** y **TypeScript** para gestionar recetas de cocina de manera local.
 
-El proyecto fue realizado como Trabajo Práctico Integrador de la materia **Desarrollo de Aplicaciones para Dispositivos Móviles**. La app permite registrar usuarios, iniciar sesión, crear recetas, visualizarlas, editarlas, eliminarlas, marcarlas como favoritas, buscar por título o ingrediente, cargar imágenes y utilizar un timer de cocción como apoyo durante la preparación.
+El proyecto fue realizado como Trabajo Práctico Integrador de la materia **Desarrollo de Aplicaciones para Dispositivos Móviles**. La app permite registrar usuarios, iniciar sesión, crear recetas, visualizarlas, editarlas, eliminarlas, marcarlas como favoritas, buscar por título o ingrediente, cargar imágenes, sumar un pack temático de salsas y utilizar un timer de cocción como apoyo durante la preparación.
 
 ---
 
@@ -18,7 +18,7 @@ El proyecto fue realizado como Trabajo Práctico Integrador de la materia **Desa
 
 **miKitchen** funciona como un recetario digital personal. Cada usuario puede acceder a sus propias recetas y administrarlas desde una interfaz visual, simple y adaptada tanto para dispositivo móvil como para navegador web.
 
-El código está separado por pantallas, componentes, navegación, datos y tipos para que sea más fácil de leer y explicar durante la defensa.
+El código está separado por pantallas, componentes, navegación, datos y tipos para que sea más fácil de leer y explicar durante la defensa. La información se conserva localmente con AsyncStorage, por lo que usuarios, recetas y cambios de perfil permanecen disponibles al volver a abrir la app en el mismo dispositivo o navegador.
 
 ---
 
@@ -26,7 +26,10 @@ El código está separado por pantallas, componentes, navegación, datos y tipos
 
 - Registro de usuario local.
 - Inicio y cierre de sesión.
+- Persistencia local de usuarios registrados.
+- Edición de perfil desde Ajustes.
 - Visualización de recetas por usuario.
+- Persistencia local de recetas por usuario.
 - Creación de nuevas recetas.
 - Visualización del detalle de cada receta.
 - Edición de recetas existentes.
@@ -39,9 +42,10 @@ El código está separado por pantallas, componentes, navegación, datos y tipos
 - Carga de imagen desde galería.
 - Carga de imagen usando cámara.
 - Visualización ampliada de imagen en el detalle de receta.
-- Timer de cocción con selector de minutos y segundos.
+- Timer de cocción con selector tipo rueda de minutos y segundos.
 - Feedback háptico en acciones relevantes.
 - Alerta y sonido al finalizar el timer.
+- Pack temático de salsas disponible desde Ajustes.
 - Diseño visual consistente con cards, fondo personalizado y navegación inferior.
 - Compatibilidad probada en Expo Go para iPhone y en navegador web.
 
@@ -94,7 +98,7 @@ El código está separado por pantallas, componentes, navegación, datos y tipos
 
 `Expo` · `React Navigation` · `Bottom Tabs` · `Native Stack`  
 `Context API` · `AsyncStorage` · `Image Picker` · `Haptics`  
-`Expo Audio` · `Ionicons` · `React Native Picker`
+`Expo Audio` · `Ionicons`
 
 ---
 
@@ -114,6 +118,8 @@ ProyectoFinalMobile/
 │   │   ├── favicon.png
 │   │   ├── icon.png
 │   │   ├── italian-tablecloth.png
+│   │   ├── logo.png
+│   │   ├── mk-logo.png
 │   │   └── splash-icon.png
 │   │
 │   ├── components/
@@ -272,15 +278,19 @@ La app cuenta con registro e inicio de sesión local.
 
 Cada receta queda asociada al usuario que la creó. De esta manera, al iniciar sesión con distintos usuarios, cada uno puede ver únicamente sus propias recetas.
 
+Los usuarios demo iniciales se combinan con los usuarios registrados y se guardan en AsyncStorage. Desde la pantalla Ajustes, el usuario puede editar nombre, email y, si lo desea, actualizar su contraseña.
+
 La autenticación fue implementada con fines académicos y funciona de manera local dentro de la aplicación.
 
 ---
 
 ## Persistencia y datos
 
-El proyecto trabaja con datos locales dentro de la aplicación. Las recetas se administran mediante Context API y estructuras de estado.
+El proyecto trabaja con datos locales dentro de la aplicación. Las recetas y usuarios se administran mediante Context API y se persisten con AsyncStorage.
 
-Si el proyecto tiene AsyncStorage activo en `RecipesContext` o `AuthContext`, las recetas y usuarios se conservan localmente en el dispositivo. En ese caso, la persistencia es local por dispositivo y no existe sincronización automática entre celulares, navegador o emuladores.
+`RecipesContext` guarda las recetas por usuario, conserva favoritos, altas, ediciones y eliminaciones, y rehidrata las imágenes locales actuales de las recetas iniciales. `AuthContext` guarda los usuarios registrados y los cambios realizados desde el perfil.
+
+La persistencia es local por dispositivo y no existe sincronización automática entre celulares, navegador o emuladores.
 
 Para sincronización real entre dispositivos sería necesario incorporar un backend, una base de datos remota o un servicio externo como Firebase o Supabase.
 
@@ -293,7 +303,7 @@ La app fue probada en:
 - Expo Go en iPhone.
 - Navegador web desde PC.
 
-Durante el desarrollo se ajustaron diferencias entre mobile y web. Por ejemplo, el feedback háptico se utiliza en dispositivos compatibles, pero no bloquea el funcionamiento general de la app cuando se ejecuta desde navegador.
+Durante el desarrollo se ajustaron diferencias entre mobile y web. Por ejemplo, el feedback háptico se utiliza en dispositivos compatibles, pero no se ejecuta en navegador y no bloquea el funcionamiento general de la app.
 
 También se ajustó el espaciado inferior de la navegación para mejorar la visualización en dispositivos con botones o gestos del sistema operativo.
 
@@ -308,7 +318,7 @@ La app permite cargar imágenes en recetas mediante:
 
 Para esto se utiliza **Expo Image Picker**.
 
-Las recetas precargadas también pueden utilizar imágenes locales almacenadas dentro de la carpeta de assets.
+Las recetas precargadas también utilizan imágenes locales almacenadas dentro de la carpeta de assets. Algunas imágenes fueron corregidas para que la extensión coincida con el contenido real del archivo y carguen correctamente en iPhone.
 
 En la pantalla de detalle, la imagen puede visualizarse en mayor tamaño para mejorar la experiencia de uso.
 
@@ -317,6 +327,8 @@ En la pantalla de detalle, la imagen puede visualizarse en mayor tamaño para me
 ## Timer de cocción
 
 El proyecto incluye una pantalla de timer que permite controlar tiempos de cocción mediante selección de minutos y segundos.
+
+El selector de tiempo usa una rueda propia implementada con componentes de React Native. Así se evita depender de un menú desplegable nativo en Android o web y se mantiene una experiencia visual más parecida al comportamiento esperado en iPhone.
 
 El timer muestra el tiempo restante, permite iniciar, detener y reiniciar la selección. Al finalizar, la app muestra una alerta, reproduce un sonido y utiliza feedback háptico cuando el dispositivo lo permite.
 
@@ -340,18 +352,18 @@ Las pantallas principales mantienen una estructura visual similar para que la ap
 
 ---
 
-## Próximas incorporaciones
+## Packs temáticos
 
-Como evolución futura, miKitchen podría sumar packs temáticos de recetas, por ejemplo:
+miKitchen incluye una sección de packs temáticos dentro de Ajustes. El pack **Salsas** está destacado y permite sumar cuatro recetas al recetario del usuario:
 
-- Cocina sin TACC.
-- Cenas románticas.
-- Comida china casera.
-- Pastelería profesional.
+- Salsa bechamel.
+- Salsa bolognesa.
+- Pesto genovés.
+- Salsa holandesa.
 
-Cada pack podría ofrecer recetas guiadas con ingredientes, pasos, fotos, categorías, tiempos de cocción y timer integrado.
+El agregado evita duplicar recetas si el usuario ya tenía ese pack cargado. Otros packs se muestran como próximos contenidos, por ejemplo recetas sin TACC, postres, arroces, pescados, ensaladas y comida thai.
 
-Esta funcionalidad se plantea como una posible expansión comercial o modelo premium, no como una función actualmente implementada.
+Esta sección funciona como base para una posible expansión comercial o modelo premium.
 
 ---
 
@@ -391,6 +403,22 @@ Desde Expo se puede ejecutar la app en:
 - Navegador web.
 - Emulador Android o iOS, si está configurado.
 
+Si en iPhone se ven imágenes antiguas por caché de Expo, se puede iniciar el proyecto limpiando caché:
+
+```bash
+npx expo start -c
+```
+
+---
+
+## Validación
+
+El proyecto incluye un script de chequeo de tipos:
+
+```bash
+npm run typecheck
+```
+
 ---
 
 ## Dependencias principales
@@ -401,7 +429,6 @@ Algunas dependencias relevantes del proyecto son:
 @expo/metro-runtime
 @expo/vector-icons
 @react-native-async-storage/async-storage
-@react-native-picker/picker
 @react-navigation/bottom-tabs
 @react-navigation/native
 @react-navigation/native-stack
@@ -424,7 +451,7 @@ react-native-web
 El proyecto cuenta con:
 
 - CRUD completo de recetas.
-- Manejo de usuarios.
+- Manejo de usuarios con persistencia local.
 - Recetas por usuario.
 - Recetas favoritas.
 - Categorías.
@@ -433,6 +460,8 @@ El proyecto cuenta con:
 - Carga de imágenes desde cámara o galería.
 - Timer de cocción.
 - Feedback visual, háptico y sonoro.
+- Edición de perfil desde Ajustes.
+- Pack de salsas disponible para agregar recetas al usuario actual.
 - Navegación por tabs y stack.
 - Diseño visual consistente entre pantallas.
 - Compatibilidad probada en iPhone con Expo Go y navegador web.
@@ -446,7 +475,7 @@ El proyecto cuenta con:
 - No utiliza backend ni base de datos remota.
 - No existe sincronización entre distintos dispositivos.
 - Los datos pueden perderse si se limpia el almacenamiento local de la app, del navegador o de Expo Go.
-- Las próximas incorporaciones, como packs temáticos de recetas, están planteadas como evolución futura y no como funcionalidad activa.
+- Los packs temáticos todavía son una funcionalidad inicial: Salsas está disponible y el resto queda planteado como evolución futura.
 
 ---
 
@@ -455,7 +484,7 @@ El proyecto cuenta con:
 - Incorporar una base de datos remota.
 - Agregar sincronización entre dispositivos.
 - Implementar autenticación real con backend.
-- Agregar packs temáticos de recetas.
+- Agregar más packs temáticos de recetas.
 - Filtrar recetas por categoría desde el listado principal.
 - Agregar búsqueda avanzada combinando título, ingredientes, categoría y favoritos.
 - Permitir editar imágenes ya cargadas con más opciones.
